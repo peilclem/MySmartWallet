@@ -1,0 +1,8 @@
+*.pyc
+.vscode/
+.venv/
+
+# Ignore uv files for now
+uv.lock
+pyproject.toml
+.python-version
