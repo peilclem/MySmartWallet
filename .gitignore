@@ -1,6 +1,9 @@
 *.pyc
 .vscode/
 .venv/
+data/
+
+draft.py
 
 # Ignore uv files for now
 uv.lock
