@@ -1,4 +1,6 @@
 import tabula
+import pdfplumber
+from datetime import datetime
 
 from mysmartwallet.models.parsers.base import PdfParser
 from mysmartwallet.models.transaction import Transaction
@@ -25,11 +27,13 @@ class CICParser(PdfParser):
                 t_dict = {}
 
                 if row.iloc[0] != '0':
-                    t_dict["date"] = row.iloc[0]
+                    date = row.iloc[0]
+                    t_dict["date"] = self.str_to_datetime(date)
+                    
                     income = float(row.iloc[-2].replace('.','').replace(',', '.'))
                     expense = float(row.iloc[-1].replace('.','').replace(',', '.'))
-                    t_dict["amount"] = income - expense # either expense or income, so we subtract the two to get the correct amount
-
+                    t_dict["amount"] = income - expense 
+                    
                     try:
                         next_row = table.iloc[i+1]
                         if next_row.iloc[0] == '0':
@@ -49,12 +53,60 @@ class CICParser(PdfParser):
         return transactions 
     
     def extract_account_names(self, file):
-        # Implement the logic to extract account names from the CIC PDF file
-        # This is a placeholder implementation; you should replace it with actual account name extraction logic.
-        return {}
+        text = ""
+        with pdfplumber.open(file) as pdf:
+            for page in pdf.pages:
+                page_text = page.extract_text()
+                if page_text:
+                    text += page_text + "\n"
+
+        text = text.split("\n")
+
+        lines_of_interest, is_of_interest = [], False
+        for i, line in enumerate(text):
+            if is_of_interest:
+                lines_of_interest.append(line)
+                is_of_interest = False
+            if '€' in line:
+                is_of_interest = True
+
+        account_names = self.clean_account_names(lines_of_interest)
+        return account_names
     
     def group_transactions_by_account(self, transactions, account_names):
-        # Implement the logic to group transactions by account for the CIC PDF file
-        # This is a placeholder implementation; you should replace it with actual grouping logic.
-        return []
+        unknown_account = 0
+        for transaction in transactions:
+            transaction.account = account_names.get(int(transaction.account), "Unknown Account")
+            if transaction.account == "Unknown Account":
+                unknown_account += 1
+        print(f"Found {unknown_account} transactions with unknown account names.")
+        return transactions
     
+    def clean_account_names(self, lines_of_interest):
+        account_names = {}
+        k = 0
+        for line in lines_of_interest:
+
+            if 'C/C' in line.upper():
+                account_names[k] = 'Compte Courant'
+                k += 1
+            elif 'LIVRET A' in line.upper():
+                account_names[k] = 'Livret A'
+                k += 1
+            elif 'DURABLE SOLIDAIRE' in line.upper():
+                account_names[k] = 'LDDS'
+                k += 1
+            elif 'LIVRET JEUNE' in line.upper():
+                account_names[k] = 'Livret JEUNE'
+                k += 1
+            else:
+                continue
+
+        return account_names
+    
+if __name__ == "__main__":
+    file_test = r"C:\Users\peill\Documents\Python_Scripts\MySmartWallet\data\CIC\Extrait2407.pdf"
+    parser = CICParser(file_test)
+    transactions = parser.parse()
+    for transaction in transactions:
+        print(transaction)

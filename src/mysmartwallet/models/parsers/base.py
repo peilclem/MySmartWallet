@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from datetime import datetime
 
 from mysmartwallet.models.transaction import Transaction
 
@@ -10,6 +11,21 @@ class PdfParser(ABC):
     def __init__(self, pdf_file):
         self.pdf_file = pdf_file
 
+
+    def str_to_datetime(self, date_str) -> datetime:
+        """
+        Converts a date string in the format 'dd/mm/yyyy' to a datetime object.
+        Args:
+            date_str (str): The date string to convert.
+        Returns:
+            datetime: A datetime object representing the date, or None if the conversion fails. 
+        """
+        if isinstance(date_str, str):
+            try:
+                return datetime.strptime(date_str, '%d/%m/%Y')
+            except ValueError:
+                return None
+        return None
 
     def parse(self) -> list[Transaction]:
         """
