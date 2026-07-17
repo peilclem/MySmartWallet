@@ -4,6 +4,7 @@
 data/
 
 draft.py
+config/
 
 # Ignore uv files for now
 uv.lock
