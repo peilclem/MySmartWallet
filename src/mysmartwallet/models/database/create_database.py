@@ -57,7 +57,7 @@ def create_database():
                     Account_ID INTEGER NOT NULL,
                     Label TEXT NOT NULL,
                     Amount REAL NOT NULL,
-                    Category TEXT NOT NULL,
+                    Category TEXT,
                     FOREIGN KEY (Account_ID) REFERENCES Accounts(Account_ID)
                     )
     ''')

@@ -11,11 +11,13 @@ class Transaction:
     amount (float): The amount of the transaction.
     label (str): A label for the transaction.
     account (str): The account associated with the transaction.
+    category (str): The category of the transsaction
     """
     date: datetime
     amount: float
     label: str
     account: str
+    category: str
 
     def __post_init__(self):
         # Ensure the amount is a float
