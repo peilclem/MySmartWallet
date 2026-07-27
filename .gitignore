@@ -2,6 +2,7 @@
 .vscode/
 .venv/
 data/
+config/
 
 draft.py
 
