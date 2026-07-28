@@ -25,6 +25,25 @@ class TransactionRepository:
 
         self.db.commit()
 
+    def get_all(self):
+        query = """SELECT * FROM Transactions ORDER BY Date DESC"""
+        rows = self.db.fetch_all(query)
+        row=rows[0]
+        print(type(rows))
+
+    #     return [
+    #     Transaction(
+    #         id=row["Transaction_ID"],
+    #         date=row["Date"],
+    #         account_id=row["Account_ID"],
+    #         label=row["Label"],
+    #         amount=row["Amount"],
+    #         category=row["Category"]
+    #     )
+    #     for row in rows
+    # ]
+
+
 if __name__ == "__main__":
     from datetime import datetime
     date = datetime(2025, 2, 15, tzinfo=None)
@@ -41,3 +60,4 @@ if __name__ == "__main__":
     repo = TransactionRepository(db)
 
     repo.add(transaction)
+    repo.get_all()

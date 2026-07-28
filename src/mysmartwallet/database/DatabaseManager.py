@@ -9,6 +9,11 @@ class DatabaseManager:
         cursor.execute(query, params)
         return cursor
 
+    def fetch_all(self, query):
+        cursor = self.execute(query)
+        print(cursor.description)
+        return cursor.fetchall()
+
     def commit(self):
         self.conn.commit()
 
