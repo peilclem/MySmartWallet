@@ -1,7 +1,12 @@
 import sqlite3
+import os
 
 class DatabaseManager:
     def __init__(self, db_path):
+        if not os.path.exists(db_path):
+            from mysmartwallet.database.create_database import create_database
+            create_database()
+
         self.conn = sqlite3.connect(db_path)
 
     def execute(self, query, params=()):
