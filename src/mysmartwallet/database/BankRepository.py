@@ -5,11 +5,6 @@ class BankRepository:
         self.db = db
 
     def add(self, bank_name):
-        bank_exists = self.check_bank_existence(bank_name)
-
-        if bank_exists:
-            return
-        
         query = """
         INSERT INTO Banks
         (Bank_name)

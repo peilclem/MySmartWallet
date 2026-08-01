@@ -4,12 +4,7 @@ class AccountRepository:
     def __init__(self, db: DatabaseManager):
         self.db = db
 
-    def add(self, user_id, bank_id, account_type):
-        account_exists = self.check_account_existence(user_id, bank_id, account_type)
-
-        if account_exists:
-            return
-        
+    def add(self, user_id, bank_id, account_type):        
         query = """
         INSERT INTO Accounts
         (User_id, Bank_ID, Type)

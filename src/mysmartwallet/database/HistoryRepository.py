@@ -5,11 +5,6 @@ class HistoryRepository:
         self.db = db
 
     def add(self, account_id, date, balance):
-        history_exists = self.check_history_existence(account_id, date)
-
-        if history_exists:
-            return
-        
         query = """
         INSERT INTO History
         (Account_ID, Date, Balance)
