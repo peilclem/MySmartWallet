@@ -1,7 +1,8 @@
 import sqlite3
+from mysmartwallet.utils.app_config import CONFIG
 
-ROOT_DIR = r"C:/Users/peill/Documents/Python_Scripts/MySmartWallet/"
-DB_PATH = ROOT_DIR + "data/MySmartWallet.db"
+ROOT_DIR = CONFIG.ROOT_DIR
+DB_PATH = CONFIG.DB_PATH
 
 def create_database():
     """
