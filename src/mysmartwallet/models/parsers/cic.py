@@ -27,8 +27,6 @@ class CICParser(PdfParser):
                 t_dict = {}
 
                 if row.iloc[0] != '0':
-                    date = row.iloc[0]
-                    t_dict["date"] = self.str_to_datetime(date)
                     
                     income = float(row.iloc[-2].replace('.','').replace(',', '.'))
                     expense = float(row.iloc[-1].replace('.','').replace(',', '.'))
@@ -46,6 +44,8 @@ class CICParser(PdfParser):
                     t_dict["category"] = self.find_category(t_dict["label"])
 
                     if not 'SOLDE CREDITEUR' in t_dict['label']:
+                        date = row.iloc[0]
+                        t_dict["date"] = self.str_to_datetime(date).date()
                         transactions.append(Transaction(**t_dict, account=f"{k}"))
 
                 else:
