@@ -14,6 +14,11 @@ class DatabaseManager:
         cursor.execute(query, params)
         return cursor
 
+    def executemany(self, query, data):
+        cursor = self.conn.cursor()
+        cursor.executemany(query, data)
+        return cursor
+
     def fetch_all(self, query):
         cursor = self.execute(query)
         print(cursor.description)
