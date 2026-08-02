@@ -10,3 +10,4 @@ draft.py
 uv.lock
 pyproject.toml
 .python-version
+justfile
