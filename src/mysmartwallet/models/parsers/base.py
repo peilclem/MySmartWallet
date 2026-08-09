@@ -8,8 +8,8 @@ class PdfParser(ABC):
     An abstract base class for parsing PDF files to extract financial transactions.
     """
 
-    def __init__(self, pdf_file):
-        self.pdf_file = pdf_file
+    def __init__(self):
+        pass
 
 
     def str_to_datetime(self, date_str) -> datetime:
@@ -27,15 +27,15 @@ class PdfParser(ABC):
                 return None
         return None
 
-    def parse(self) -> list[Transaction]:
+    def parse(self, pdf_file) -> list[Transaction]:
         """
         Parses the PDF file and extracts transactions.
 
         Returns:
             List[Transaction]: A list of Transaction objects extracted from the PDF file.
         """
-        transactions_id = self.extract_transaction_from_tables(self.pdf_file)
-        account_names = self.extract_account_names(self.pdf_file)
+        transactions_id = self.extract_transaction_from_tables(pdf_file)
+        account_names = self.extract_account_names(pdf_file)
 
         transactions = self.group_transactions_by_account(transactions_id, account_names)
 

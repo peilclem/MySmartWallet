@@ -6,8 +6,8 @@ from mysmartwallet.models.parsers.base import PdfParser
 from mysmartwallet.models.transaction import Transaction
 
 class CICParser(PdfParser):
-    def __init__(self, pdf_file):
-        super().__init__(pdf_file)
+    def __init__(self):
+        super().__init__()
 
     def extract_transaction_from_tables(self, file) -> list[Transaction]:
         """Extracts transaction data from tables in a CIC PDF file.
