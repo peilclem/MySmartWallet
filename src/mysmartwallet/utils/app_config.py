@@ -16,6 +16,7 @@ class AppConfig:
             cls._instance.config.read(config_file_path)
             cls._instance.ROOT_DIR = cls._instance.config.get('PATH','ROOT_DIR')
             cls._instance.DATA_DIR = cls._instance.config.get('PATH','DATA_DIR')
+            cls._instance.DB_PATH = cls._instance.config.get('PATH','DB_PATH')
 
         return cls._instance
 
