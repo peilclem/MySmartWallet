@@ -41,7 +41,8 @@ class CICParser(PdfParser):
                     except IndexError:
                         t_dict["label"] = row.iloc[2]
 
-                    t_dict["category"] = self.find_category(t_dict["label"])
+                    # To be implemented in TransactionService
+                    t_dict["category"] = None
 
                     if not 'SOLDE CREDITEUR' in t_dict['label']:
                         date = row.iloc[0]
@@ -104,9 +105,6 @@ class CICParser(PdfParser):
                 continue
 
         return account_names
-
-    def find_category(self, label):
-        return None
     
 if __name__ == "__main__":
     file_test = r"C:\Users\peill\Documents\Python_Scripts\MySmartWallet\data\CIC\Extrait2407.pdf"
