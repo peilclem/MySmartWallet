@@ -1,6 +1,7 @@
 import os
 import sys
 
+
 def get_base_path():
     if getattr(sys, 'frozen', False):
         base_path = os.path.dirname(sys.executable)

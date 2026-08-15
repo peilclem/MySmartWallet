@@ -1,5 +1,6 @@
-from mysmartwallet.models.transaction import Transaction
 from mysmartwallet.database.DatabaseManager import DatabaseManager
+from mysmartwallet.models.transaction import Transaction
+
 
 class TransactionRepository:
     def __init__(self, db: DatabaseManager):

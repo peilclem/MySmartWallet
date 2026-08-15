@@ -1,13 +1,14 @@
-import tabula
+
 import pdfplumber
-from datetime import datetime
+import tabula
 
 from mysmartwallet.models.parsers.base import PdfParser
 from mysmartwallet.models.transaction import Transaction
 
+
 class CICParser(PdfParser):
-    def __init__(self, pdf_file):
-        super().__init__(pdf_file)
+    def __init__(self):
+        super().__init__()
 
     def extract_transaction_from_tables(self, file) -> list[Transaction]:
         """Extracts transaction data from tables in a CIC PDF file.
@@ -28,8 +29,8 @@ class CICParser(PdfParser):
 
                 if row.iloc[0] != '0':
                     
-                    income = float(row.iloc[-2].replace('.','').replace(',', '.'))
-                    expense = float(row.iloc[-1].replace('.','').replace(',', '.'))
+                    income = float(row.iloc[-1].replace('.','').replace(',', '.'))
+                    expense = float(row.iloc[-2].replace('.','').replace(',', '.'))
                     t_dict["amount"] = income - expense 
                     
                     try:
@@ -41,7 +42,8 @@ class CICParser(PdfParser):
                     except IndexError:
                         t_dict["label"] = row.iloc[2]
 
-                    t_dict["category"] = self.find_category(t_dict["label"])
+                    # To be implemented in TransactionService
+                    t_dict["category"] = None
 
                     if not 'SOLDE CREDITEUR' in t_dict['label']:
                         date = row.iloc[0]
@@ -104,9 +106,6 @@ class CICParser(PdfParser):
                 continue
 
         return account_names
-
-    def find_category(self, label):
-        return None
     
 if __name__ == "__main__":
     file_test = r"C:\Users\peill\Documents\Python_Scripts\MySmartWallet\data\CIC\Extrait2407.pdf"

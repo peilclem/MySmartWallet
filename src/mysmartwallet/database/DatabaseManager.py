@@ -1,5 +1,6 @@
-import sqlite3
 import os
+import sqlite3
+
 
 class DatabaseManager:
     def __init__(self, db_path):
@@ -21,7 +22,6 @@ class DatabaseManager:
 
     def fetch_all(self, query):
         cursor = self.execute(query)
-        print(cursor.description)
         return cursor.fetchall()
 
     def commit(self):

@@ -3,13 +3,14 @@ from datetime import datetime
 
 from mysmartwallet.models.transaction import Transaction
 
+
 class PdfParser(ABC):   
     """
     An abstract base class for parsing PDF files to extract financial transactions.
     """
 
-    def __init__(self, pdf_file):
-        self.pdf_file = pdf_file
+    def __init__(self):
+        pass
 
 
     def str_to_datetime(self, date_str) -> datetime:
@@ -27,15 +28,15 @@ class PdfParser(ABC):
                 return None
         return None
 
-    def parse(self) -> list[Transaction]:
+    def parse(self, pdf_file) -> list[Transaction]:
         """
         Parses the PDF file and extracts transactions.
 
         Returns:
             List[Transaction]: A list of Transaction objects extracted from the PDF file.
         """
-        transactions_id = self.extract_transaction_from_tables(self.pdf_file)
-        account_names = self.extract_account_names(self.pdf_file)
+        transactions_id = self.extract_transaction_from_tables(pdf_file)
+        account_names = self.extract_account_names(pdf_file)
 
         transactions = self.group_transactions_by_account(transactions_id, account_names)
 
@@ -55,7 +56,7 @@ class PdfParser(ABC):
         """
         for transaction in transactions:
             account_id = int(transaction.account)
-            transaction.account = account_names[account_id] if account_id in account_names else "Unknown Account"
+            transaction.account = account_names.get(account_id, "Unknown Account")
 
         return transactions
     
@@ -67,7 +68,6 @@ class PdfParser(ABC):
         This method should be implemented by subclasses to handle the specific logic for extracting transaction data from the provided PDF file.
         Args:
             file: The PDF file from which to extract transaction data."""
-        pass
 
 
     @abstractmethod
@@ -80,4 +80,3 @@ class PdfParser(ABC):
         Returns:
             dict[int, str]: A dictionary mapping table indices to account names extracted from the PDF file.
         """
-        pass

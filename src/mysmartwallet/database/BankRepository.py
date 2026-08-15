@@ -1,5 +1,6 @@
 from mysmartwallet.database.DatabaseManager import DatabaseManager
 
+
 class BankRepository:
     def __init__(self, db: DatabaseManager):
         self.db = db
