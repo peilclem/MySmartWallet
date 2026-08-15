@@ -13,13 +13,18 @@ class PdfParser(ABC):
         pass
 
 
-    def str_to_datetime(self, date_str) -> datetime:
-        """
-        Converts a date string in the format 'dd/mm/yyyy' to a datetime object.
-        Args:
-            date_str (str): The date string to convert.
-        Returns:
-            datetime: A datetime object representing the date, or None if the conversion fails. 
+    def str_to_datetime(self, date_str:str) -> datetime:
+        """Convert string date to datetime
+
+        Parameters
+        ----------
+        date_str : str
+            Date in string format
+
+        Returns
+        -------
+        datetime
+            Date in datetime format
         """
         if isinstance(date_str, str):
             try:
@@ -28,12 +33,18 @@ class PdfParser(ABC):
                 return None
         return None
 
-    def parse(self, pdf_file) -> list[Transaction]:
-        """
-        Parses the PDF file and extracts transactions.
+    def parse(self, pdf_file: str) -> list[Transaction]:
+        """Parse a bank report
 
-        Returns:
-            List[Transaction]: A list of Transaction objects extracted from the PDF file.
+        Parameters
+        ----------
+        pdf_file : str
+            Pdf bank report to parse
+
+        Returns
+        -------
+        list[Transaction]
+            List of all transactions
         """
         transactions_id = self.extract_transaction_from_tables(pdf_file)
         account_names = self.extract_account_names(pdf_file)
@@ -43,16 +54,20 @@ class PdfParser(ABC):
         return transactions
 
 
-    def group_transactions_by_account(self, transactions, account_names) -> list[Transaction]:
-        """
-        Associate an account to each transactions
-        This method should be implemented by subclasses to handle the specific logic for grouping transactions by account.
+    def group_transactions_by_account(self, transactions:list[Transaction], account_names:dict) -> list[Transaction]:
+        """Group transactions by account
 
-        Args:
-            table: The table containing transaction data.
-            account_names: A list of account names to group transactions by.
-        Returns:
-            List[Transaction]: A list of Transaction objects grouped by account.
+        Parameters
+        ----------
+        transactions : list[Transaction]
+            All transactions
+        account_names : dict
+            Dictionnary of account names associated with table number
+
+        Returns
+        -------
+        list[Transaction]
+            All transactions with an associated account name
         """
         for transaction in transactions:
             account_id = int(transaction.account)
@@ -62,21 +77,29 @@ class PdfParser(ABC):
     
 
     @abstractmethod
-    def extract_transaction_from_tables(self, file) -> list[Transaction]:
-        """
-        Abstract method to extract transaction data from tables in a PDF file.
+    def extract_transaction_from_tables(self, file:str) -> list[Transaction]:
+        """Abstract method to extract transaction data from tables in a PDF file.
         This method should be implemented by subclasses to handle the specific logic for extracting transaction data from the provided PDF file.
-        Args:
-            file: The PDF file from which to extract transaction data."""
 
+        Parameters
+        ----------
+        file : str
+            Pdf file to parse
+
+        Returns
+        -------
+        list[Transaction]
+            All extracted transactions
+        """
 
     @abstractmethod
-    def extract_account_names(self, file):
-        """
-        Extracts account names from the provided PDF file.
+    def extract_account_names(self, file:str):
+        """Extracts account names from the provided PDF file.
         This method should be implemented by subclasses to handle the specific logic for extracting account names from the provided PDF file.
-        Args:
-            file: The PDF file from which to extract account names.
-        Returns:
-            dict[int, str]: A dictionary mapping table indices to account names extracted from the PDF file.
+
+
+        Parameters
+        ----------
+        file : str
+            Pdf file to parse
         """

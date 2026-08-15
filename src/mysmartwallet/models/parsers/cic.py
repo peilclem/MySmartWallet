@@ -1,4 +1,3 @@
-
 import pdfplumber
 import tabula
 
@@ -7,15 +6,25 @@ from mysmartwallet.models.transaction import Transaction
 
 
 class CICParser(PdfParser):
+    """Parser for CIC bank reports
+    """
     def __init__(self):
+        """Initialize the CICParser
+        """
         super().__init__()
 
     def extract_transaction_from_tables(self, file) -> list[Transaction]:
-        """Extracts transaction data from tables in a CIC PDF file.
-        Args:
-            file: The CIC PDF file from which to extract transaction data.
-        Returns:
-            List[Transaction]: A list of Transaction objects containing the extracted transaction data.
+        """Extract transactions from the pdf
+
+        Parameters
+        ----------
+        file : str
+            Pdf file to parse
+
+        Returns
+        -------
+        list[Transaction]
+            Transactions extracted from the pdf
         """
         tables = tabula.read_pdf(file, pages='all', encoding='latin-1', multiple_tables=True)
         transactions = []
@@ -56,6 +65,18 @@ class CICParser(PdfParser):
         return transactions 
     
     def extract_account_names(self, file):
+        """Extract account names from the pdf
+
+        Parameters
+        ----------
+        file : str
+            File to parse
+
+        Returns
+        -------
+        dict
+            Dictionnary of account names associated with table number
+        """
         text = ""
         with pdfplumber.open(file) as pdf:
             for page in pdf.pages:
@@ -76,7 +97,21 @@ class CICParser(PdfParser):
         account_names = self.clean_account_names(lines_of_interest)
         return account_names
     
-    def group_transactions_by_account(self, transactions, account_names):
+    def group_transactions_by_account(self, transactions: list[Transaction], account_names: dict):
+        """Group all tranasactions by account
+
+        Parameters
+        ----------
+        transactions : list[Transaction]
+            All transactions extracted from a pdf
+        account_names : dict
+            Dictionnary of account names associated with table number
+
+        Returns
+        -------
+        list[Transaction]
+            All transactions with updated account_name
+        """
         unknown_account = 0
         for transaction in transactions:
             transaction.account = account_names.get(int(transaction.account), "Unknown Account")
@@ -85,7 +120,19 @@ class CICParser(PdfParser):
         print(f"Found {unknown_account} transactions with unknown account names.")
         return transactions
     
-    def clean_account_names(self, lines_of_interest):
+    def clean_account_names(self, lines_of_interest: list) -> dict:
+        """Clean account names to unify
+
+        Parameters
+        ----------
+        lines_of_interest : list
+            Text from pdf that contains account name
+
+        Returns
+        -------
+        dict
+            Dictionnary of account names associated with table number
+        """
         account_names = {}
         k = 0
         for line in lines_of_interest:
