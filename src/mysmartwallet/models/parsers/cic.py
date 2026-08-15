@@ -28,8 +28,8 @@ class CICParser(PdfParser):
 
                 if row.iloc[0] != '0':
                     
-                    income = float(row.iloc[-2].replace('.','').replace(',', '.'))
-                    expense = float(row.iloc[-1].replace('.','').replace(',', '.'))
+                    income = float(row.iloc[-1].replace('.','').replace(',', '.'))
+                    expense = float(row.iloc[-2].replace('.','').replace(',', '.'))
                     t_dict["amount"] = income - expense 
                     
                     try:

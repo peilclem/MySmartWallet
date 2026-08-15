@@ -20,8 +20,10 @@ class TransactionService:
 
     def _normalize_transaction(self, transaction):
         transaction.label = transaction.label.strip()
-        if "CARTE 1685" in transaction.label:
-            transaction.label = transaction.label.replace("CARTE 1685", "").strip()
+        text_to_remove = ["CARTE 1685", "CARTE 7581"]
+        for text in text_to_remove:
+            if text in transaction.label.upper():
+                transaction.label = transaction.label.upper().replace(text, "").strip()
         return transaction
 
     def _categorize_transaction(self, transaction):

@@ -21,7 +21,6 @@ class DatabaseManager:
 
     def fetch_all(self, query):
         cursor = self.execute(query)
-        print(cursor.description)
         return cursor.fetchall()
 
     def commit(self):
