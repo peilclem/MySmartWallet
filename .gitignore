@@ -6,8 +6,8 @@ config/
 
 draft.py
 
-# Ignore uv files for now
-uv.lock
-pyproject.toml
-.python-version
+# # Ignore uv files for now
+# uv.lock
+# pyproject.toml
+# .python-version
 justfile
