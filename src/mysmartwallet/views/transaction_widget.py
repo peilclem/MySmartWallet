@@ -9,7 +9,6 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-# from mysmartwallet.database.TransactionRepository import TransactionRepository
 
 class TransactionWidget(QWidget):
     import_clicked = Signal(str)

@@ -1,4 +1,5 @@
 from PySide6.QtWidgets import QApplication
+from PySide6.QtGui import QIcon
 
 from mysmartwallet.controllers.transaction_controller import TransactionController
 from mysmartwallet.database.DatabaseManager import DatabaseManager
@@ -11,6 +12,7 @@ from mysmartwallet.views.transaction_widget import TransactionWidget
 
 def main():
     app = QApplication([])
+    app.setWindowIcon(QIcon("resources/icons/msw_logo.png"))
 
     # -------------------
     # Infrastructure
