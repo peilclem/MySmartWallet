@@ -1,0 +1,36 @@
+name: Build
+
+on:
+  push:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
+
+      - name: Install dependencies
+        run: uv sync --locked
+
+      - name: Build application
+        run: uv run pyinstaller --onefile --windowed --icon resources/icons/msw_logo.ico --name MSW src/mysmartwallet/main.py
+        
+
+      - name: Upload application
+        uses: actions/upload-artifact@v4
+        with:
+          name: MSW-Windows
+          path: dist/MSW.exe
+
+      - name: Copy configuration
+        run: cp config/config.ini dist/config.ini
