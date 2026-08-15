@@ -3,6 +3,13 @@ import sys
 
 
 def get_base_path():
+    """Get base path of the project
+
+    Returns
+    -------
+    str
+        Base path of the projet
+    """
     if getattr(sys, 'frozen', False):
         base_path = os.path.dirname(sys.executable)
     else:
@@ -10,6 +17,13 @@ def get_base_path():
     return base_path
 
 def get_config_path():
+    """Get config file path
+
+    Returns
+    -------
+    str
+        Path of the config file
+    """
     base_path = get_base_path()
     if getattr(sys, 'frozen', False):
         config_path = os.path.join(base_path, "config.ini")

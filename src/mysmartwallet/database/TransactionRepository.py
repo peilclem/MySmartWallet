@@ -3,10 +3,26 @@ from mysmartwallet.models.transaction import Transaction
 
 
 class TransactionRepository:
+    """Object to manage connection with the transaction table in the database
+    """
     def __init__(self, db: DatabaseManager):
+        """Initialize TransactionRepository
+
+        Parameters
+        ----------
+        db : DatabaseManager
+            database
+        """
         self.db = db
 
     def add(self, transaction: Transaction):
+        """Add a new transaction to the database
+
+        Parameters
+        ----------
+        transaction : Transaction
+            Transaction to be added
+        """
         query = """
         INSERT INTO Transactions
         (Date, Account_ID, Label, Amount, Category)
@@ -27,6 +43,13 @@ class TransactionRepository:
         self.db.commit()
 
     def add_many(self, transactions: list[Transaction]):
+        """Add multiple transactions to the database
+
+        Parameters
+        ----------
+        transactions : list[Transaction]
+            List of transactions to be added
+        """
         query = """
         INSERT INTO Transactions
         (Date, Account_ID, Label, Amount, Category)
@@ -48,6 +71,13 @@ class TransactionRepository:
         self.db.commit()
 
     def get_all(self):
+        """Fetch all transactions from the database
+        
+        Returns
+        -------
+        list
+            List of all transactions in the database
+        """
         query = """SELECT * FROM Transactions ORDER BY Date DESC"""
         rows = self.db.fetch_all(query)
 

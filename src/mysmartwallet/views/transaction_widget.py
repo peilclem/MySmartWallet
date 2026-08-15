@@ -9,11 +9,17 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
+from mysmartwallet.models.transaction import Transaction
+
 
 class TransactionWidget(QWidget):
+    """Transaction widget to display a table of transactions
+    """
     import_clicked = Signal(str)
 
     def __init__(self):
+        """Initialize the widget
+        """
         super().__init__()
         self.setWindowTitle("Transaction Widget")
         self.setMinimumSize(600, 300)
@@ -23,6 +29,8 @@ class TransactionWidget(QWidget):
 
 
     def _setup_ui(self):
+        """Create the ui of the widget
+        """
         layout = QVBoxLayout(self)
 
         self.title = QLabel("Transactions")
@@ -41,17 +49,25 @@ class TransactionWidget(QWidget):
         layout.addWidget(self.table)
 
     def _connect_signals(self):
+        """Signal when button is clicked
+        """
         self.import_button.clicked.connect(self._on_import_clicked)
 
     def _on_import_clicked(self):
+        """Action when file button is clicked
+        """
         file_path = QFileDialog.getOpenFileName(self, "Select PDF File", "", "PDF Files (*.pdf)")
 
         if file_path:
             self.import_clicked.emit(file_path[0])
 
-    def set_transactions(self, transactions):
-        """
-        Remplit la table avec une liste de Transaction
+    def set_transactions(self, transactions:Transaction):
+        """Fill table with imported transactions
+
+        Parameters
+        ----------
+        transactions : list[Transaction]
+            Newly imported transactions
         """
         self.model.setRowCount(0)
 
@@ -66,6 +82,13 @@ class TransactionWidget(QWidget):
 
             self.model.appendRow(row)
 
-    def refresh(self, transactions):
+    def refresh(self, transactions:list[Transaction]):
+        """Refresh the view
+
+        Parameters
+        ----------
+        transactions : list[Transaction]
+            Transactions to display
+        """
         self.set_transactions(transactions=transactions)
 

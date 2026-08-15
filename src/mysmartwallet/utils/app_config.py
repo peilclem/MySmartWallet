@@ -4,9 +4,21 @@ from mysmartwallet.utils.utils import get_config_path
 
 
 class AppConfig:
+    """Class to read the config file
+
+    Returns
+    -------
+    AppConfig
+    """
     _instance = None
 
     def __new__(cls):
+        """Create a unique AppConfig instance
+
+        Returns
+        -------
+        AppConfig
+        """
         if cls._instance is None:
             cls._instance = super().__new__(cls)
             cls._instance.config = ConfigParser()
