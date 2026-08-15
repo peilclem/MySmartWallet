@@ -4,7 +4,6 @@ from mysmartwallet.utils.utils import get_config_path
 
 
 class AppConfig:
-    """"""
     _instance = None
 
     def __new__(cls):

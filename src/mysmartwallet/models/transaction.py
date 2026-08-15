@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from datetime import datetime
 
+
 @dataclass
 class Transaction:
     """
@@ -22,7 +23,7 @@ class Transaction:
     def __post_init__(self):
         # Ensure the amount is a float
         if not isinstance(self.amount, float):
-            raise ValueError(f"Amount must be a float, got {type(self.amount).__name__}")
+            raise TypeError(f"Amount must be a float, got {type(self.amount).__name__}")
         # Ensure the date is in the correct format (YYYY/MM/DD)
         if isinstance(self.date, str):
             try:

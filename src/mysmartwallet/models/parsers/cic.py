@@ -1,9 +1,10 @@
-import tabula
+
 import pdfplumber
-from datetime import datetime
+import tabula
 
 from mysmartwallet.models.parsers.base import PdfParser
 from mysmartwallet.models.transaction import Transaction
+
 
 class CICParser(PdfParser):
     def __init__(self):

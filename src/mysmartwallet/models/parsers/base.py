@@ -3,6 +3,7 @@ from datetime import datetime
 
 from mysmartwallet.models.transaction import Transaction
 
+
 class PdfParser(ABC):   
     """
     An abstract base class for parsing PDF files to extract financial transactions.
@@ -55,7 +56,7 @@ class PdfParser(ABC):
         """
         for transaction in transactions:
             account_id = int(transaction.account)
-            transaction.account = account_names[account_id] if account_id in account_names else "Unknown Account"
+            transaction.account = account_names.get(account_id, "Unknown Account")
 
         return transactions
     
@@ -67,7 +68,6 @@ class PdfParser(ABC):
         This method should be implemented by subclasses to handle the specific logic for extracting transaction data from the provided PDF file.
         Args:
             file: The PDF file from which to extract transaction data."""
-        pass
 
 
     @abstractmethod
@@ -80,4 +80,3 @@ class PdfParser(ABC):
         Returns:
             dict[int, str]: A dictionary mapping table indices to account names extracted from the PDF file.
         """
-        pass

@@ -1,6 +1,14 @@
-from PySide6.QtWidgets import QFileDialog, QTableView, QWidget, QVBoxLayout, QLabel, QPushButton
 from PySide6.QtCore import Qt, Signal
-from PySide6.QtGui import QStandardItemModel, QStandardItem
+from PySide6.QtGui import QStandardItem, QStandardItemModel
+from PySide6.QtWidgets import (
+    QFileDialog,
+    QLabel,
+    QPushButton,
+    QTableView,
+    QVBoxLayout,
+    QWidget,
+)
+
 # from mysmartwallet.database.TransactionRepository import TransactionRepository
 
 class TransactionWidget(QWidget):
@@ -49,7 +57,6 @@ class TransactionWidget(QWidget):
         self.model.setRowCount(0)
 
         for t in transactions:
-            print(f"Ajout de la transaction: {t.date}, {t.label}, {t.amount}")
             row = [
                 QStandardItem(str(t.date)),
                 QStandardItem(str(t.account)),

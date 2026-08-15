@@ -1,12 +1,12 @@
 from PySide6.QtWidgets import QApplication
 
+from mysmartwallet.controllers.transaction_controller import TransactionController
+from mysmartwallet.database.DatabaseManager import DatabaseManager
+from mysmartwallet.database.TransactionRepository import TransactionRepository
+from mysmartwallet.models.parsers.cic import CICParser
+from mysmartwallet.services.transaction_service import TransactionService
 from mysmartwallet.utils.app_config import CONFIG
 from mysmartwallet.views.transaction_widget import TransactionWidget
-from mysmartwallet.controllers.transaction_controller import TransactionController
-from mysmartwallet.services.transaction_service import TransactionService
-from mysmartwallet.database.TransactionRepository import TransactionRepository
-from mysmartwallet.database.DatabaseManager import DatabaseManager
-from mysmartwallet.models.parsers.cic import CICParser
 
 
 def main():
@@ -36,7 +36,7 @@ def main():
     # -------------------
     # Controller
     # -------------------
-    controller = TransactionController(
+    TransactionController(
         view=view,
         parser=parser,
         transaction_service=transaction_service,

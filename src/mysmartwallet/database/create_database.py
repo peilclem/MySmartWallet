@@ -1,4 +1,5 @@
 import sqlite3
+
 from mysmartwallet.utils.app_config import CONFIG
 
 ROOT_DIR = CONFIG.ROOT_DIR
