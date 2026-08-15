@@ -9,7 +9,7 @@ class TransactionWidget(QWidget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Transaction Widget")
-        self.setMinimumSize(800, 600)
+        self.setMinimumSize(600, 300)
 
         self._setup_ui()
         self._connect_signals()
@@ -49,8 +49,10 @@ class TransactionWidget(QWidget):
         self.model.setRowCount(0)
 
         for t in transactions:
+            print(f"Ajout de la transaction: {t.date}, {t.label}, {t.amount}")
             row = [
                 QStandardItem(str(t.date)),
+                QStandardItem(str(t.account)),
                 QStandardItem(t.label),
                 QStandardItem(f"{t.amount:.2f}"),
                 QStandardItem(getattr(t, "category", ""))
@@ -59,5 +61,5 @@ class TransactionWidget(QWidget):
             self.model.appendRow(row)
 
     def refresh(self, transactions):
-        self.set_transactions(transactions=[])
+        self.set_transactions(transactions=transactions)
 

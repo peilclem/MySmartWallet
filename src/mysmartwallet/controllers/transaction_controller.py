@@ -4,6 +4,8 @@ class TransactionController:
         self.parser = parser
         self.transaction_service = transaction_service
         self.transaction_repository = transaction_repository
+        
+        self.load_transactions_into_view()
 
         self.view.import_clicked.connect(self.import_transactions)
 
