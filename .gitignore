@@ -1,0 +1,14 @@
+*.pyc
+.vscode/
+.venv/
+data/
+config/
+
+draft.py
+justfile
+
+docs/_build/
+
+build/
+dist/
+*.spec

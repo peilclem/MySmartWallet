@@ -1,1 +1,1 @@
-# MysmartWallet
+# MySmartWallet
