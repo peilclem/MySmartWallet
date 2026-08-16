@@ -1,5 +1,5 @@
-from PySide6.QtWidgets import QApplication
 from PySide6.QtGui import QIcon
+from PySide6.QtWidgets import QApplication
 
 from mysmartwallet.controllers.transaction_controller import TransactionController
 from mysmartwallet.database.DatabaseManager import DatabaseManager
