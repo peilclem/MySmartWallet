@@ -1,0 +1,85 @@
+name: CI
+
+on:
+    push:
+        branches:
+            - develop
+    pull_request:
+        branches:
+            - develop
+            - master
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+        - name: Checkout repository
+          uses: actions/checkout@v4
+
+        - name: Set up Python
+          uses: actions/setup-python@v5
+          with:
+            python-version: 3.14
+        
+        - name: Install uv
+          uses: astral-sh/setup-uv@v6
+
+        - name: Install dependencies
+          run: uv sync --locked
+
+        - name: Run ruff
+          run: uv run ruff check src/ --output-format=concise
+          
+  documentation:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.14
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
+
+      - name: Install dependencies
+        run: uv sync --locked
+
+      - name: Build documentation
+        run: uv run sphinx-build -W -b html docs docs/_build/html
+
+  build:
+    if: github.base_ref == 'master'
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
+
+      - name: Install dependencies
+        run: uv sync --locked
+
+      - name: Build application
+        run: uv run pyinstaller --onefile --windowed --icon resources/icons/msw_logo.ico --name MSW src/mysmartwallet/main.py
+        
+
+      - name: Upload application
+        uses: actions/upload-artifact@v4
+        with:
+          name: MSW-Windows
+          path: dist/MSW.exe
+
+      - name: Copy configuration
+        run: cp config/config.ini dist/config.ini
+
