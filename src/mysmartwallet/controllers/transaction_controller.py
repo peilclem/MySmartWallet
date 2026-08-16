@@ -1,6 +1,6 @@
 from mysmartwallet.database.TransactionRepository import TransactionRepository
-from mysmartwallet.services.transaction_service import TransactionService
 from mysmartwallet.models.parsers.base import PdfParser
+from mysmartwallet.services.transaction_service import TransactionService
 from mysmartwallet.views.transaction_widget import TransactionWidget
 
 
