@@ -9,6 +9,11 @@ from mysmartwallet.services.transaction_service import TransactionService
 from mysmartwallet.utils.app_config import CONFIG
 from mysmartwallet.views.transaction_widget import TransactionWidget
 
+from mysmartwallet.utils.log_mgr import init_logger
+
+import logging
+from json import load
+
 
 def main():
     app = QApplication([])
@@ -46,6 +51,11 @@ def main():
     )
 
     view.show()
+
+    init_logger(level=logging.INFO)
+
+    logging.info("App started")
+    logging.debug("DEBUG mode")
 
     app.exec()
 

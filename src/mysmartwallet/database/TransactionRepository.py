@@ -1,6 +1,10 @@
+import logging
+
 from mysmartwallet.database.DatabaseManager import DatabaseManager
 from mysmartwallet.models.transaction import Transaction
 
+
+logger = logging.getLogger(__name__)
 
 class TransactionRepository:
     """Object to manage connection with the transaction table in the database
@@ -28,6 +32,7 @@ class TransactionRepository:
         (Date, Account_ID, Label, Amount, Category)
         VALUES (?, ?, ?, ?, ?)
         """
+        logger.info(f"Adding {transaction.label} in the database")
 
         self.db.execute(
             query,
@@ -55,6 +60,7 @@ class TransactionRepository:
         (Date, Account_ID, Label, Amount, Category)
         VALUES (?, ?, ?, ?, ?)
         """
+        logger.info(f"Adding {len(transactions)} transactions in the database")
 
         data = [
             (
@@ -78,6 +84,8 @@ class TransactionRepository:
         list
             List of all transactions in the database
         """
+        logger.debug("Get all transactions in the database")
+
         query = """SELECT * FROM Transactions ORDER BY Date DESC"""
         rows = self.db.fetch_all(query)
 

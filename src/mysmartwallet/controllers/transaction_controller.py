@@ -1,8 +1,12 @@
+import logging
+
 from mysmartwallet.database.TransactionRepository import TransactionRepository
 from mysmartwallet.models.parsers.base import PdfParser
 from mysmartwallet.services.transaction_service import TransactionService
 from mysmartwallet.views.transaction_widget import TransactionWidget
 
+
+logger = logging.getLogger(__name__)
 
 class TransactionController:
     """Controller for managing transactions in the application.
@@ -53,4 +57,5 @@ class TransactionController:
         """Send transactions to transaction view
         """
         transactions = self.transaction_repository.get_all()
+        logger.info("Loading transactions into view")
         self.view.refresh(transactions)

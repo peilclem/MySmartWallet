@@ -1,5 +1,9 @@
+import logging
+
 from mysmartwallet.database.DatabaseManager import DatabaseManager
 
+
+logger = logging.getLogger(__name__)
 
 class AccountRepository:
     """Object to manage connection with the account table in the database
@@ -26,6 +30,7 @@ class AccountRepository:
         account_type : str
             Type of the account
         """
+        logger.info(f"Adding account {bank_id}-{account_type} in the database")
         query = """
         INSERT INTO Accounts
         (User_id, Bank_ID, Type)
@@ -60,6 +65,7 @@ class AccountRepository:
         bool
             True if the account exists, False otherwise
         """
+        logging.debug("Checking if {bank_id}-{account_type} alreaady exists")
         query = """
         SELECT * FROM Accounts
         WHERE User_id = ? AND Bank_ID = ? AND Type = ?
@@ -78,6 +84,7 @@ class AccountRepository:
         list
             List of all accounts in the database
         """
+        logger.debug("Fetching all accounts")
         query = """SELECT * FROM Accounts"""
         rows = self.db.fetch_all(query)
         return rows

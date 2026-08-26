@@ -1,8 +1,12 @@
+import logging
+
 from abc import ABC, abstractmethod
 from datetime import datetime
 
 from mysmartwallet.models.transaction import Transaction
 
+
+logger = logging.getLogger(__name__)
 
 class PdfParser(ABC):   
     """
@@ -46,6 +50,8 @@ class PdfParser(ABC):
         list[Transaction]
             List of all transactions
         """
+        logger.info(f"Parsing {pdf_file}")
+
         transactions_id = self.extract_transaction_from_tables(pdf_file)
         account_names = self.extract_account_names(pdf_file)
 
@@ -69,6 +75,8 @@ class PdfParser(ABC):
         list[Transaction]
             All transactions with an associated account name
         """
+        logger.info("Grouping transactions by account")
+        
         for transaction in transactions:
             account_id = int(transaction.account)
             transaction.account = account_names.get(account_id, "Unknown Account")

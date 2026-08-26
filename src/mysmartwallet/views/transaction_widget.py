@@ -1,3 +1,5 @@
+import logging
+
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QStandardItem, QStandardItemModel
 from PySide6.QtWidgets import (
@@ -11,6 +13,8 @@ from PySide6.QtWidgets import (
 
 from mysmartwallet.models.transaction import Transaction
 
+
+logger = logging.getLogger(__name__)
 
 class TransactionWidget(QWidget):
     """Transaction widget to display a table of transactions
@@ -56,6 +60,7 @@ class TransactionWidget(QWidget):
     def _on_import_clicked(self):
         """Action when file button is clicked
         """
+        logger.info("Button clicked")
         file_path = QFileDialog.getOpenFileName(self, "Select PDF File", "", "PDF Files (*.pdf)")
 
         if file_path:

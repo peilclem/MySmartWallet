@@ -1,6 +1,10 @@
+import logging
+
 from mysmartwallet.database import TransactionRepository
 from mysmartwallet.models.transaction import Transaction
 
+
+logger = logging.getLogger(__name__)
 
 class TransactionService:
     """Holds the services like checking if transaction is valid, do categorization, etc.
@@ -23,6 +27,8 @@ class TransactionService:
         transactions : list[Transaction]
             List of all transactions that just got parsed
         """
+        logger.info(f"Cleaning transaction labels")
+        
         cleaned_transactions = []
         for t in transactions:
             if not self._is_valid_transaction(t):

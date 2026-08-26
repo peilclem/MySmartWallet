@@ -1,9 +1,12 @@
 import pdfplumber
 import tabula
+import logging
 
 from mysmartwallet.models.parsers.base import PdfParser
 from mysmartwallet.models.transaction import Transaction
 
+
+logger = logging.getLogger(__name__)
 
 class CICParser(PdfParser):
     """Parser for CIC bank reports
@@ -26,6 +29,8 @@ class CICParser(PdfParser):
         list[Transaction]
             Transactions extracted from the pdf
         """
+        logger.info(f"Extracting transactions from {file}")
+
         tables = tabula.read_pdf(file, pages='all', encoding='latin-1', multiple_tables=True)
         transactions = []
         
@@ -77,6 +82,7 @@ class CICParser(PdfParser):
         dict
             Dictionnary of account names associated with table number
         """
+        logger.info(f"Extracting account names from {file}")
         text = ""
         with pdfplumber.open(file) as pdf:
             for page in pdf.pages:
@@ -112,12 +118,15 @@ class CICParser(PdfParser):
         list[Transaction]
             All transactions with updated account_name
         """
-        unknown_account = 0
+        logger.info(f"Grouping transactions")
+
+        unknown_account_nb = 0
         for transaction in transactions:
             transaction.account = account_names.get(int(transaction.account), "Unknown Account")
             if transaction.account == "Unknown Account":
-                unknown_account += 1
-        print(f"Found {unknown_account} transactions with unknown account names.")
+                unknown_account_nb += 1
+        if unknown_account_nb > 0:
+            logger.warning(f"Found {unknown_account_nb} transactions with unknown account names.")
         return transactions
     
     def clean_account_names(self, lines_of_interest: list) -> dict:
@@ -133,6 +142,8 @@ class CICParser(PdfParser):
         dict
             Dictionnary of account names associated with table number
         """
+        logger.info("Cleaning account names")
+        
         account_names = {}
         k = 0
         for line in lines_of_interest:
