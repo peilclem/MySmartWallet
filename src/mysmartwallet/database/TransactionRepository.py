@@ -105,9 +105,9 @@ if __name__ == "__main__":
     file_test = r"C:\Users\peill\Documents\Python_Scripts\MySmartWallet\data\CIC\Extrait2407.pdf"
     from mysmartwallet.models.parsers.cic import CICParser
     from mysmartwallet.utils.app_config import CONFIG
-    DB_PATH = CONFIG.DATA_DIR + "MySmartWallet.db"
-    parser = CICParser(file_test)
-    transactions = parser.parse()
+    DB_PATH = CONFIG.DATA_DIR / "MySmartWallet.db"
+    parser = CICParser()
+    transactions = parser.parse(file_test)
     repo = TransactionRepository(DatabaseManager(DB_PATH))
     repo.add_many(transactions)
 

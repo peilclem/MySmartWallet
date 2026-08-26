@@ -1,6 +1,6 @@
 from configparser import ConfigParser
 
-from mysmartwallet.utils.utils import get_config_path
+from mysmartwallet.utils.utils import get_base_path, get_config_path
 
 
 class AppConfig:
@@ -25,9 +25,9 @@ class AppConfig:
             config_file_path = get_config_path()
 
             cls._instance.config.read(config_file_path)
-            cls._instance.ROOT_DIR = cls._instance.config.get('PATH','ROOT_DIR')
-            cls._instance.DATA_DIR = cls._instance.config.get('PATH','DATA_DIR')
-            cls._instance.DB_PATH = cls._instance.config.get('PATH','DB_PATH')
+            cls._instance.ROOT_DIR = get_base_path()
+            cls._instance.DATA_DIR = cls._instance.ROOT_DIR / cls._instance.config.get('PATH','DATA_DIR')
+            cls._instance.DB_PATH =  cls._instance.ROOT_DIR / cls._instance.config.get('PATH','DB_PATH')
 
         return cls._instance
 
