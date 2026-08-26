@@ -1,8 +1,7 @@
-import sqlite3
 import logging
+import sqlite3
 
 from mysmartwallet.utils.app_config import CONFIG
-
 
 logger = logging.getLogger(__name__)
 DB_PATH = CONFIG.DB_PATH

@@ -1,3 +1,5 @@
+import logging
+
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QApplication
 
@@ -7,12 +9,8 @@ from mysmartwallet.database.TransactionRepository import TransactionRepository
 from mysmartwallet.models.parsers.cic import CICParser
 from mysmartwallet.services.transaction_service import TransactionService
 from mysmartwallet.utils.app_config import CONFIG
-from mysmartwallet.views.transaction_widget import TransactionWidget
-
 from mysmartwallet.utils.log_mgr import init_logger
-
-import logging
-from json import load
+from mysmartwallet.views.transaction_widget import TransactionWidget
 
 
 def main():
@@ -53,9 +51,11 @@ def main():
     view.show()
 
     init_logger(level=logging.INFO)
+    
+    logger = logging.getLogger(__name__)
 
-    logging.info("App started")
-    logging.debug("DEBUG mode")
+    logger.info("App started")
+    logger.debug("DEBUG mode")
 
     app.exec()
 

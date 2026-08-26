@@ -13,7 +13,6 @@ from PySide6.QtWidgets import (
 
 from mysmartwallet.models.transaction import Transaction
 
-
 logger = logging.getLogger(__name__)
 
 class TransactionWidget(QWidget):

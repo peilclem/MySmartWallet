@@ -2,7 +2,6 @@ import logging
 
 from mysmartwallet.database.DatabaseManager import DatabaseManager
 
-
 logger = logging.getLogger(__name__)
 
 class AccountRepository:
@@ -65,7 +64,7 @@ class AccountRepository:
         bool
             True if the account exists, False otherwise
         """
-        logging.debug("Checking if {bank_id}-{account_type} alreaady exists")
+        logger.debug("Checking if {bank_id}-{account_type} alreaady exists")
         query = """
         SELECT * FROM Accounts
         WHERE User_id = ? AND Bank_ID = ? AND Type = ?

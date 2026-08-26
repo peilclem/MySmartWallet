@@ -3,7 +3,6 @@ import logging
 from mysmartwallet.database import TransactionRepository
 from mysmartwallet.models.transaction import Transaction
 
-
 logger = logging.getLogger(__name__)
 
 class TransactionService:
@@ -27,7 +26,7 @@ class TransactionService:
         transactions : list[Transaction]
             List of all transactions that just got parsed
         """
-        logger.info(f"Cleaning transaction labels")
+        logger.info("Cleaning transaction labels")
         
         cleaned_transactions = []
         for t in transactions:

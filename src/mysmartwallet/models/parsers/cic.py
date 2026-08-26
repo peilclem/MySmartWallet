@@ -1,10 +1,10 @@
+import logging
+
 import pdfplumber
 import tabula
-import logging
 
 from mysmartwallet.models.parsers.base import PdfParser
 from mysmartwallet.models.transaction import Transaction
-
 
 logger = logging.getLogger(__name__)
 
@@ -118,7 +118,7 @@ class CICParser(PdfParser):
         list[Transaction]
             All transactions with updated account_name
         """
-        logger.info(f"Grouping transactions")
+        logger.info("Grouping transactions")
 
         unknown_account_nb = 0
         for transaction in transactions:
