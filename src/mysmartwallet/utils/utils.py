@@ -10,11 +10,12 @@ def get_base_path():
     str
         Base path of the projet
     """
-    
+
     if getattr(sys, "frozen", False):
         return Path(sys.executable).parent
 
     return Path(__file__).resolve().parents[3]
+
 
 def get_config_path():
     """Get config file path
@@ -25,9 +26,10 @@ def get_config_path():
         Path of the config file
     """
     base_path = get_base_path()
-    if getattr(sys, 'frozen', False):
+    if getattr(sys, "frozen", False):
         return base_path / "config.ini"
     return base_path / "config/config.ini"
+
 
 if __name__ == "__main__":
     print(get_base_path())

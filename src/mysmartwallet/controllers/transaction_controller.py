@@ -7,17 +7,19 @@ from mysmartwallet.views.transaction_widget import TransactionWidget
 
 logger = logging.getLogger(__name__)
 
+
 class TransactionController:
     """Controller for managing transactions in the application.
     Handles the interaction between the view, parser, service, and repository.
     """
+
     def __init__(
-            self,
-            view: TransactionWidget,
-            parser: PdfParser,
-            transaction_service: TransactionService,
-            transaction_repository: TransactionRepository
-            ):
+        self,
+        view: TransactionWidget,
+        parser: PdfParser,
+        transaction_service: TransactionService,
+        transaction_repository: TransactionRepository,
+    ):
         """Instanciate the transaction controller widget
 
         Parameters
@@ -35,12 +37,12 @@ class TransactionController:
         self.parser = parser
         self.transaction_service = transaction_service
         self.transaction_repository = transaction_repository
-        
+
         self.load_transactions_into_view()
 
         self.view.import_clicked.connect(self.import_transactions)
 
-    def import_transactions(self, file_path:str):
+    def import_transactions(self, file_path: str):
         """Get transactions from a pdf imported by the user
 
         Parameters

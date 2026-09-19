@@ -10,14 +10,18 @@ version_dict = {
 
 __version__ = "{major}.{minor}.{patch}".format(**version_dict)
 
+
 def get_version():
     return __version__
+
 
 def get_application_name():
     return __name__
 
+
 def get_author():
     return __author__
+
 
 def get_license():
     return __license__

@@ -4,9 +4,10 @@ from mysmartwallet.database.DatabaseManager import DatabaseManager
 
 logger = logging.getLogger(__name__)
 
+
 class AccountRepository:
-    """Object to manage connection with the account table in the database
-    """
+    """Object to manage connection with the account table in the database"""
+
     def __init__(self, db: DatabaseManager):
         """Initialize AccountRepository
 
@@ -17,7 +18,7 @@ class AccountRepository:
         """
         self.db = db
 
-    def add(self, user_id: int, bank_id: int, account_type: str):     
+    def add(self, user_id: int, bank_id: int, account_type: str):
         """Add a new account to the database
 
         Parameters
@@ -36,14 +37,7 @@ class AccountRepository:
         VALUES (?, ?, ?)
         """
 
-        self.db.execute(
-            query,
-            (
-                user_id,
-                bank_id,
-                account_type
-            )
-        )
+        self.db.execute(query, (user_id, bank_id, account_type))
 
         self.db.commit()
 
@@ -77,7 +71,7 @@ class AccountRepository:
 
     def fetch_all(self):
         """Fetch all accounts from the database
-        
+
         Returns
         -------
         list

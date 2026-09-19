@@ -45,13 +45,13 @@ def main():
         view=view,
         parser=parser,
         transaction_service=transaction_service,
-        transaction_repository=transaction_repository
+        transaction_repository=transaction_repository,
     )
 
     view.show()
 
     init_logger(level=logging.INFO)
-    
+
     logger = logging.getLogger(__name__)
 
     logger.info("App started")

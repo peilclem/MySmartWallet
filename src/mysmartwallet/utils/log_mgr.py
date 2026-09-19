@@ -20,7 +20,7 @@ def init_logger(log_file: str = "logs/app.log", level=logging.DEBUG):
 
     formatter = CenteredFormatter(
         fmt="%(asctime)s | %(levelname)s | %(name)s | %(message)s",
-        datefmt="%Y-%m-%d %H:%M:%S"
+        datefmt="%Y-%m-%d %H:%M:%S",
     )
 
     # Console handler
@@ -42,12 +42,7 @@ def init_logger(log_file: str = "logs/app.log", level=logging.DEBUG):
     root_logger.addHandler(file_handler)
 
     # Remove DEBUG logs from libraries
-    NOISY_LIBS = [
-        "pdfplumber",
-        "tabula",
-        "pdfinterp",
-        "pdfinterp"
-    ]
+    NOISY_LIBS = ["pdfplumber", "tabula", "pdfinterp", "pdfinterp"]
 
     for lib in NOISY_LIBS:
         logging.getLogger(lib).setLevel(logging.WARNING)

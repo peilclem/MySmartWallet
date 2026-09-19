@@ -15,14 +15,14 @@ from mysmartwallet.models.transaction import Transaction
 
 logger = logging.getLogger(__name__)
 
+
 class TransactionWidget(QWidget):
-    """Transaction widget to display a table of transactions
-    """
+    """Transaction widget to display a table of transactions"""
+
     import_clicked = Signal(str)
 
     def __init__(self):
-        """Initialize the widget
-        """
+        """Initialize the widget"""
         super().__init__()
         self.setWindowTitle("Transaction Widget")
         self.setMinimumSize(600, 300)
@@ -30,10 +30,8 @@ class TransactionWidget(QWidget):
         self._setup_ui()
         self._connect_signals()
 
-
     def _setup_ui(self):
-        """Create the ui of the widget
-        """
+        """Create the ui of the widget"""
         layout = QVBoxLayout(self)
 
         self.title = QLabel("Transactions")
@@ -44,7 +42,9 @@ class TransactionWidget(QWidget):
         self.table = QTableView()
 
         self.model = QStandardItemModel()
-        self.model.setHorizontalHeaderLabels(["Date", "Account", "Label", "Amount", "Category"])
+        self.model.setHorizontalHeaderLabels(
+            ["Date", "Account", "Label", "Amount", "Category"]
+        )
         self.table.setModel(self.model)
 
         layout.addWidget(self.title)
@@ -81,12 +81,12 @@ class TransactionWidget(QWidget):
                 QStandardItem(str(t.account)),
                 QStandardItem(t.label),
                 QStandardItem(f"{t.amount:.2f}"),
-                QStandardItem(getattr(t, "category", ""))
+                QStandardItem(getattr(t, "category", "")),
             ]
 
             self.model.appendRow(row)
 
-    def refresh(self, transactions:list[Transaction]):
+    def refresh(self, transactions: list[Transaction]):
         """Refresh the view
 
         Parameters
@@ -95,4 +95,3 @@ class TransactionWidget(QWidget):
             Transactions to display
         """
         self.set_transactions(transactions=transactions)
-

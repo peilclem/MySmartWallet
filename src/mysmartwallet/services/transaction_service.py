@@ -5,10 +5,11 @@ from mysmartwallet.models.transaction import Transaction
 
 logger = logging.getLogger(__name__)
 
+
 class TransactionService:
-    """Holds the services like checking if transaction is valid, do categorization, etc.
-    """
-    def __init__(self, transaction_repository:TransactionRepository):
+    """Holds the services like checking if transaction is valid, do categorization, etc."""
+
+    def __init__(self, transaction_repository: TransactionRepository):
         """Initialize TransactionService
 
         Parameters
@@ -18,7 +19,7 @@ class TransactionService:
         """
         self.transaction_repository = transaction_repository
 
-    def import_transactions(self, transactions:list[Transaction]):
+    def import_transactions(self, transactions: list[Transaction]):
         """Clean transaction labels
 
         Parameters
@@ -27,7 +28,7 @@ class TransactionService:
             List of all transactions that just got parsed
         """
         logger.info("Cleaning transaction labels")
-        
+
         cleaned_transactions = []
         for t in transactions:
             if not self._is_valid_transaction(t):
@@ -38,7 +39,7 @@ class TransactionService:
 
         self.transaction_repository.add_many(cleaned_transactions)
 
-    def _is_valid_transaction(self, transaction:Transaction):
+    def _is_valid_transaction(self, transaction: Transaction):
         """Check if amount is not null
 
         Parameters
@@ -53,7 +54,7 @@ class TransactionService:
         """
         return transaction.amount != 0
 
-    def _normalize_transaction(self, transaction:Transaction) -> Transaction:
+    def _normalize_transaction(self, transaction: Transaction) -> Transaction:
         """Clean transaction labels
 
         Parameters
@@ -73,7 +74,7 @@ class TransactionService:
                 transaction.label = transaction.label.upper().replace(text, "").strip()
         return transaction
 
-    def _categorize_transaction(self, transaction:Transaction):
+    def _categorize_transaction(self, transaction: Transaction):
         """Dumb categorization
 
         Parameters
@@ -92,4 +93,3 @@ class TransactionService:
             return "Income"
         else:
             return "Unknown"
-

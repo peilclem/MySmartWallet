@@ -5,9 +5,10 @@ from mysmartwallet.models.transaction import Transaction
 
 logger = logging.getLogger(__name__)
 
+
 class TransactionRepository:
-    """Object to manage connection with the transaction table in the database
-    """
+    """Object to manage connection with the transaction table in the database"""
+
     def __init__(self, db: DatabaseManager):
         """Initialize TransactionRepository
 
@@ -40,8 +41,8 @@ class TransactionRepository:
                 transaction.account,
                 transaction.label,
                 transaction.amount,
-                transaction.category
-            )
+                transaction.category,
+            ),
         )
 
         self.db.commit()
@@ -67,7 +68,7 @@ class TransactionRepository:
                 transaction.account,
                 transaction.label,
                 transaction.amount,
-                transaction.category
+                transaction.category,
             )
             for transaction in transactions
         ]
@@ -77,7 +78,7 @@ class TransactionRepository:
 
     def get_all(self):
         """Fetch all transactions from the database
-        
+
         Returns
         -------
         list
@@ -89,21 +90,22 @@ class TransactionRepository:
         rows = self.db.fetch_all(query)
 
         return [
-        Transaction(
-            date=row[1],
-            account=row[2],
-            label=row[3],
-            amount=row[4],
-            category=row[5]
-        )
-        for row in rows
-    ]
+            Transaction(
+                date=row[1],
+                account=row[2],
+                label=row[3],
+                amount=row[4],
+                category=row[5],
+            )
+            for row in rows
+        ]
 
 
 if __name__ == "__main__":
     file_test = r"C:\Users\peill\Documents\Python_Scripts\MySmartWallet\data\CIC\Extrait2407.pdf"
     from mysmartwallet.models.parsers.cic import CICParser
     from mysmartwallet.utils.app_config import CONFIG
+
     DB_PATH = CONFIG.DATA_DIR / "MySmartWallet.db"
     parser = CICParser()
     transactions = parser.parse(file_test)
