@@ -2,7 +2,6 @@
 .vscode/
 .venv/
 data/
-config/
 
 docs/_build/
 

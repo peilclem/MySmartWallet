@@ -2,6 +2,8 @@ import logging
 import sys
 from pathlib import Path
 
+from mysmartwallet.config.config import CONFIG
+
 
 class CenteredFormatter(logging.Formatter):
     """
@@ -14,7 +16,7 @@ class CenteredFormatter(logging.Formatter):
         return super().format(record)
 
 
-def init_logger(log_file: str = "logs/app.log", level=logging.DEBUG):
+def init_logger(log_file: str = "logs/app.log", level=CONFIG.LOG_LEVEL):
     # Création dossier logs si nécessaire
     Path("logs").mkdir(exist_ok=True)
 
@@ -42,7 +44,7 @@ def init_logger(log_file: str = "logs/app.log", level=logging.DEBUG):
     root_logger.addHandler(file_handler)
 
     # Remove DEBUG logs from libraries
-    NOISY_LIBS = ["pdfplumber", "tabula", "pdfinterp", "pdfinterp"]
+    NOISY_LIBS = ["pdfplumber", "tabula", "pdfinterp", "pdfinterp", "pdfminer", "pdfminer.six"]
 
     for lib in NOISY_LIBS:
         logging.getLogger(lib).setLevel(logging.WARNING)

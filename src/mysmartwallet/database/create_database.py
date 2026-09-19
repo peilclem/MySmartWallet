@@ -1,10 +1,9 @@
 import logging
 import sqlite3
 
-from mysmartwallet.utils.app_config import CONFIG
+from mysmartwallet.config.config import CONFIG
 
 logger = logging.getLogger(__name__)
-DB_PATH = CONFIG.DB_PATH
 
 
 def create_database():
@@ -12,7 +11,8 @@ def create_database():
     Create tables of the database
     """
     logger.debug("Creating database")
-    con = sqlite3.connect(DB_PATH)
+    CONFIG.DB_PATH.parent.mkdir(parents=True, exist_ok=True)
+    con = sqlite3.connect(str(CONFIG.DB_PATH))
     cursor = con.cursor()
 
     # Tables de dimension

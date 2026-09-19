@@ -8,10 +8,10 @@ from mysmartwallet.database.DatabaseManager import DatabaseManager
 from mysmartwallet.database.TransactionRepository import TransactionRepository
 from mysmartwallet.models.parsers.cic import CICParser
 from mysmartwallet.services.transaction_service import TransactionService
-from mysmartwallet.utils.app_config import CONFIG
 from mysmartwallet.utils.log_mgr import init_logger
 from mysmartwallet.views.transaction_widget import TransactionWidget
 
+from mysmartwallet.config.config import CONFIG
 
 def main():
     app = QApplication([])
@@ -33,7 +33,7 @@ def main():
 
     view.show()
 
-    init_logger(level=logging.DEBUG)
+    init_logger(level=CONFIG.LOG_LEVEL)
 
     logger = logging.getLogger(__name__)
 

@@ -104,7 +104,7 @@ class TransactionRepository:
 if __name__ == "__main__":
     file_test = r"C:\Users\peill\Documents\Python_Scripts\MySmartWallet\data\CIC\Extrait2407.pdf"
     from mysmartwallet.models.parsers.cic import CICParser
-    from mysmartwallet.utils.app_config import CONFIG
+    from mysmartwallet.config.config import CONFIG
 
     DB_PATH = CONFIG.DATA_DIR / "MySmartWallet.db"
     parser = CICParser()

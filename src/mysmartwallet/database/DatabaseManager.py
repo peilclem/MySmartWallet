@@ -1,11 +1,14 @@
+
 import os
 import sqlite3
+
+from pathlib import Path
 
 
 class DatabaseManager:
     """Manage connection with the database"""
 
-    def __init__(self, db_path: str):
+    def __init__(self, db_path: Path):
         """Initialize DatabaseManager
 
         Parameters
@@ -13,12 +16,12 @@ class DatabaseManager:
         db_path : str
             Path to the database file
         """
-        if not os.path.exists(db_path):
+        if not Path.exists(db_path):
             from mysmartwallet.database.create_database import create_database
 
             create_database()
 
-        self.conn = sqlite3.connect(db_path)
+        self.conn = sqlite3.connect(str(db_path))
 
     def execute(self, query: str, params: tuple = ()):
         """Execute a query
