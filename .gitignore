@@ -4,9 +4,6 @@
 data/
 config/
 
-draft.py
-justfile
-
 docs/_build/
 
 build/
