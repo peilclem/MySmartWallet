@@ -39,7 +39,7 @@ def create_database():
                     Bank_ID INTEGER NOT NULL,
                     Type TEXT NOT NULL, --Savings, C/C, crypto ...
                     FOREIGN KEY (User_id) REFERENCES Users(User_id),
-                    FOREIGN KEY (Bank_ID) REFERENCES Users(Bank_ID)
+                    FOREIGN KEY (Bank_ID) REFERENCES Banks(Bank_ID)
 
                     )
     """)
@@ -49,7 +49,7 @@ def create_database():
                        (Account_id INTEGER NOT NULL,
                         Date DATE NOT NULL,
                         Balance REAL NOT NULL,
-                        FOREIGN KEY (Account_id) REFERENCES Account(Account_id)
+                        FOREIGN KEY (Account_id) REFERENCES Accounts(Account_id)
                         UNIQUE (Account_id, Date)
                         )
         """)
