@@ -17,31 +17,14 @@ def main():
     app = QApplication([])
     app.setWindowIcon(QIcon("resources/icons/msw_logo.png"))
 
-    # -------------------
-    # Infrastructure
-    # -------------------
     db = DatabaseManager(CONFIG.DB_PATH)
     transaction_repository = TransactionRepository(db)
-
-    # -------------------
-    # Services
-    # -------------------
     transaction_service = TransactionService(transaction_repository)
-
-    # -------------------
-    # Parser
-    # -------------------
     parser = CICParser()
 
-    # -------------------
-    # View
-    # -------------------
     view = TransactionWidget()
 
-    # -------------------
-    # Controller
-    # -------------------
-    TransactionController(
+    controller = TransactionController(
         view=view,
         parser=parser,
         transaction_service=transaction_service,
@@ -50,7 +33,7 @@ def main():
 
     view.show()
 
-    init_logger(level=logging.INFO)
+    init_logger(level=logging.DEBUG)
 
     logger = logging.getLogger(__name__)
 

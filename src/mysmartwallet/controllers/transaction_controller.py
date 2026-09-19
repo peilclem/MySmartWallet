@@ -50,13 +50,26 @@ class TransactionController:
         file_path : str
             Path to the PDF file containing transaction data.
         """
-        transactions = self.parser.parse(file_path)
-        self.transaction_service.import_transactions(transactions)
-        self.load_transactions_into_view()
+        logger.debug(f"ENTER import_transactions: {file_path}")
+
+        try:
+            transactions = self.parser.parse(file_path)
+            logger.debug(f"Parsed transactions: {len(transactions)}")
+
+            self.transaction_service.import_transactions(transactions)
+            logger.debug("Import done")
+
+            self.load_transactions_into_view()
+            logger.debug("View refreshed")
+
+        except Exception as e:
+            import traceback
+
+            logger.error(f"ERROR in import_transactions: {e}")
+            logger.error(traceback.format_exc())
 
     def load_transactions_into_view(self):
-        """Send transactions to transaction view
-        """
+        """Send transactions to transaction view"""
         transactions = self.transaction_repository.get_all()
         logger.info("Loading transactions into view")
         self.view.refresh(transactions)

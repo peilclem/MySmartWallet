@@ -52,20 +52,21 @@ class TransactionWidget(QWidget):
         layout.addWidget(self.table)
 
     def _connect_signals(self):
-        """Signal when button is clicked
-        """
+        """Signal when button is clicked"""
         self.import_button.clicked.connect(self._on_import_clicked)
 
     def _on_import_clicked(self):
-        """Action when file button is clicked
-        """
+        """Action when file button is clicked"""
         logger.info("Button clicked")
-        file_path = QFileDialog.getOpenFileName(self, "Select PDF File", "", "PDF Files (*.pdf)")
+        file_path = QFileDialog.getOpenFileName(
+            self, "Select PDF File", "", "PDF Files (*.pdf)"
+        )[0]
 
         if file_path:
-            self.import_clicked.emit(file_path[0])
+            logger.debug(f"_on_import_clicked: emitting from widget id={id(self)}")
+            self.import_clicked.emit(file_path)
 
-    def set_transactions(self, transactions:Transaction):
+    def set_transactions(self, transactions: list[Transaction]):
         """Fill table with imported transactions
 
         Parameters
