@@ -32,7 +32,7 @@ class TransactionRepository:
         (Date, Account_ID, Label, Amount, Category)
         VALUES (?, ?, ?, ?, ?)
         """
-        logger.info(f"Adding {transaction.label} in the database")
+        logger.debug(f"Adding {transaction.label} in the database")
 
         self.db.execute(
             query,

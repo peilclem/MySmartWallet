@@ -30,7 +30,7 @@ class AccountRepository:
         account_type : str
             Type of the account
         """
-        logger.info(f"Adding account {bank_id}-{account_type} in the database")
+        logger.debug(f"Adding account {bank_id}-{account_type} in the database")
         query = """
         INSERT INTO Accounts
         (User_id, Bank_ID, Type)

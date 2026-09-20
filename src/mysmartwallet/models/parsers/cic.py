@@ -20,7 +20,7 @@ class CICParser(PdfParser):
         """
         Extract tables from PDF using pdfplumber.
         """
-        logger.info(f"Extracting tables with pdfplumber from {file}")
+        logger.debug(f"Extracting tables with pdfplumber from {file}")
 
         tables = []
 
@@ -39,7 +39,7 @@ class CICParser(PdfParser):
         """
         Extract transactions from PDF.
         """
-        logger.info(f"Extracting transactions from {file}")
+        logger.debug(f"Extracting transactions from {file}")
 
         tables = self.extract_tables(file)
         transactions: List[Transaction] = []
@@ -92,7 +92,7 @@ class CICParser(PdfParser):
         """
         Extract account names from PDF text.
         """
-        logger.info(f"Extracting account names from {file}")
+        logger.debug(f"Extracting account names from {file}")
 
         text = ""
 
@@ -143,7 +143,7 @@ class CICParser(PdfParser):
         account_names: Dict[int, str]
     ) -> List[Transaction]:
 
-        logger.info("Grouping transactions")
+        logger.debug("Grouping transactions")
 
         unknown_account_nb = 0
 
@@ -165,7 +165,7 @@ class CICParser(PdfParser):
 
     def clean_account_names(self, lines_of_interest: List[str]) -> Dict[int, str]:
 
-        logger.info("Cleaning account names")
+        logger.debug("Cleaning account names")
 
         account_names: Dict[int, str] = {}
         k = 0

@@ -71,5 +71,5 @@ class TransactionController:
     def load_transactions_into_view(self):
         """Send transactions to transaction view"""
         transactions = self.transaction_repository.get_all()
-        logger.info("Loading transactions into view")
+        logger.info(f"Loading {len(transactions)} transactions into view")
         self.view.refresh(transactions)

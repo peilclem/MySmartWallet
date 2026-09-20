@@ -27,7 +27,7 @@ class TransactionService:
         transactions : list[Transaction]
             List of all transactions that just got parsed
         """
-        logger.info("Cleaning transaction labels")
+        logger.debug("Cleaning transaction labels")
 
         cleaned_transactions = []
         for t in transactions:
