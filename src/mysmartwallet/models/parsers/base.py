@@ -1,6 +1,6 @@
 import logging
 from abc import ABC, abstractmethod
-from datetime import datetime
+from datetime import datetime, date
 
 from mysmartwallet.models.transaction import Transaction
 
@@ -12,10 +12,11 @@ class PdfParser(ABC):
     An abstract base class for parsing PDF files to extract financial transactions.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
+        """Initialize the PdfParser"""
         pass
 
-    def str_to_datetime(self, date_str: str) -> datetime:
+    def str_to_date(self, date_str: str) -> date | None:
         """Convert string date to datetime
 
         Parameters
@@ -25,15 +26,15 @@ class PdfParser(ABC):
 
         Returns
         -------
-        datetime
-            Date in datetime format
+        date
+            Date in date format
         """
         if isinstance(date_str, str):
             try:
-                return datetime.strptime(date_str, "%d/%m/%Y")
+                return datetime.strptime(date_str, "%d/%m/%Y").date()
             except ValueError:
+                logger.warning(f"Invalid date format: {date_str}")
                 return None
-        return None
 
     def parse(self, pdf_file: str) -> list[Transaction]:
         """Parse a bank report
@@ -50,8 +51,8 @@ class PdfParser(ABC):
         """
         logger.info(f"Parsing {pdf_file}")
 
-        transactions_id = self.extract_transaction_from_tables(pdf_file)
         account_names = self.extract_account_names(pdf_file)
+        transactions_id = self.extract_transaction_from_tables(pdf_file)
 
         transactions = self.group_transactions_by_account(
             transactions_id, account_names
@@ -103,6 +104,7 @@ class PdfParser(ABC):
     @abstractmethod
     def extract_account_names(self, file: str):
         """Extracts account names from the provided PDF file.
+        
         This method should be implemented by subclasses to handle the specific logic for extracting account names from the provided PDF file.
 
 

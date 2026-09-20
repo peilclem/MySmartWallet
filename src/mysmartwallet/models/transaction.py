@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import datetime, date
 
 
 @dataclass
@@ -14,7 +14,7 @@ class Transaction:
         if date is not the right foramt
     """
 
-    date: datetime
+    date: date | None
     amount: float
     label: str
     account: str
