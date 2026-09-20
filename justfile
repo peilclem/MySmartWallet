@@ -9,7 +9,6 @@ format:
 
 build:
     rm -rf dist
-    uv run pyinstaller --onefile --windowed --icon resources/icons/msw_logo.ico --name MSW src/mysmartwallet/main.py
-    cp config/config.ini dist/config.ini
+    uv run pyinstaller \--onefile --windowed --icon resources/icons/msw_logo.ico --name MSW src/mysmartwallet/main.py
     mkdir dist/data/
     powershell Compress-Archive -Path dist\* -DestinationPath dist/MSW.zip
