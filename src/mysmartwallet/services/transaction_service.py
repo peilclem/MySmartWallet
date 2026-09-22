@@ -1,6 +1,6 @@
 import logging
 
-from mysmartwallet.database import TransactionRepository
+from mysmartwallet.database.TransactionRepository import TransactionRepository
 from mysmartwallet.models.transaction import Transaction
 
 logger = logging.getLogger(__name__)
@@ -9,17 +9,17 @@ logger = logging.getLogger(__name__)
 class TransactionService:
     """Holds the services like checking if transaction is valid, do categorization, etc."""
 
-    def __init__(self, transaction_repository: TransactionRepository):
+    def __init__(self, transaction_repository: TransactionRepository) -> None:
         """Initialize TransactionService
 
         Parameters
         ----------
         transaction_repository : TransactionRepository
-            TransactionRepository that manages connection with transaction tanle
+            TransactionRepository that manages connection with transaction table
         """
         self.transaction_repository = transaction_repository
 
-    def import_transactions(self, transactions: list[Transaction]):
+    def import_transactions(self, transactions: list[Transaction]) -> None:
         """Clean transaction labels
 
         Parameters
@@ -39,7 +39,7 @@ class TransactionService:
 
         self.transaction_repository.add_many(cleaned_transactions)
 
-    def _is_valid_transaction(self, transaction: Transaction):
+    def _is_valid_transaction(self, transaction: Transaction) -> bool:
         """Check if amount is not null
 
         Parameters
@@ -74,7 +74,7 @@ class TransactionService:
                 transaction.label = transaction.label.upper().replace(text, "").strip()
         return transaction
 
-    def _categorize_transaction(self, transaction: Transaction):
+    def _categorize_transaction(self, transaction: Transaction) -> str:
         """Dumb categorization
 
         Parameters
