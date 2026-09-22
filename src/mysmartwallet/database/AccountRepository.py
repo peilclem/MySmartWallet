@@ -32,7 +32,11 @@ class AccountRepository:
         """
         logger.info(
             "Adding account",
-            extra={"user_id": user_id, "bank_id": bank_id, "account_type": account_type},
+            extra={
+                "user_id": user_id,
+                "bank_id": bank_id,
+                "account_type": account_type,
+            },
         )
         query = """
         INSERT INTO Accounts
@@ -63,7 +67,11 @@ class AccountRepository:
         """
         logger.debug(
             "Checking account existence",
-            extra={"user_id": user_id, "bank_id": bank_id, "account_type": account_type},
+            extra={
+                "user_id": user_id,
+                "bank_id": bank_id,
+                "account_type": account_type,
+            },
         )
         query = """
         SELECT * FROM Accounts

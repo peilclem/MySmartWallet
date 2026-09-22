@@ -13,15 +13,16 @@ from mysmartwallet.views.transaction_widget import TransactionWidget
 
 from mysmartwallet.config.config import CONFIG
 
+
 def main():
-    
+
     # Configure logging after CONFIG is loaded and before anything else logs.
     init_logger(level=CONFIG.LOG_LEVEL)
 
     logger = logging.getLogger(__name__)
     logger.info("App started")
     logger.debug("DEBUG mode")
-    
+
     app = QApplication([])
     app.setWindowIcon(QIcon("resources/icons/msw_logo.png"))
 

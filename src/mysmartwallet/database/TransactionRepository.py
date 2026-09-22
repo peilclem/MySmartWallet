@@ -69,7 +69,9 @@ class TransactionRepository:
         (Date, Account_ID, Label, Amount, Category)
         VALUES (?, ?, ?, ?, ?)
         """
-        logger.info("Adding transactions in the database", extra={"count": len(transactions)})
+        logger.info(
+            "Adding transactions in the database", extra={"count": len(transactions)}
+        )
 
         data = [
             (

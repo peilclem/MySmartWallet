@@ -44,7 +44,14 @@ def init_logger(log_file: str = "logs/app.log", level=CONFIG.LOG_LEVEL):
     root_logger.addHandler(file_handler)
 
     # Remove DEBUG logs from libraries
-    NOISY_LIBS = ["pdfplumber", "tabula", "pdfinterp", "pdfinterp", "pdfminer", "pdfminer.six"]
+    NOISY_LIBS = [
+        "pdfplumber",
+        "tabula",
+        "pdfinterp",
+        "pdfinterp",
+        "pdfminer",
+        "pdfminer.six",
+    ]
 
     for lib in NOISY_LIBS:
         logging.getLogger(lib).setLevel(logging.WARNING)

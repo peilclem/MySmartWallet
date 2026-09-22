@@ -53,8 +53,10 @@ class CICParser(PdfParser):
 
                 try:
                     if row.iloc[0] != "0":
-
-                        if "SOLDE CREDITEUR" in row["Date"] or "SOLDE DEBITEUR" in row["Opération"]:
+                        if (
+                            "SOLDE CREDITEUR" in row["Date"]
+                            or "SOLDE DEBITEUR" in row["Opération"]
+                        ):
                             continue
 
                         income = self._to_float(row.iloc[-1])
@@ -76,11 +78,9 @@ class CICParser(PdfParser):
                         if not t_dict["date"]:
                             t_dict["date"] = self.default_date
 
-                        t_dict["category"] = "-" #FIXME: Assign default category ?
+                        t_dict["category"] = "-"  # FIXME: Assign default category ?
 
-                        transactions.append(
-                            Transaction(**t_dict, account=str(k))
-                        )
+                        transactions.append(Transaction(**t_dict, account=str(k)))
 
                 except Exception as e:
                     logger.warning(
@@ -122,11 +122,15 @@ class CICParser(PdfParser):
                 "septembre": "09",
                 "octobre": "10",
                 "novembre": "11",
-                "décembre": "12"
+                "décembre": "12",
             }
             date_str = lines[12].split(" ")  # Assuming the date is always on line 13
-            date_str[1] = month_dict.get(date_str[1].lower(), "01")  # Default to January if not found
-            self.default_date = self.str_to_date(f"{date_str[0]}/{date_str[1]}/{date_str[2]}")
+            date_str[1] = month_dict.get(
+                date_str[1].lower(), "01"
+            )  # Default to January if not found
+            self.default_date = self.str_to_date(
+                f"{date_str[0]}/{date_str[1]}/{date_str[2]}"
+            )
         except IndexError:
             self.default_date = self.str_to_date("01/01/1900")
 
@@ -141,9 +145,7 @@ class CICParser(PdfParser):
         return self.clean_account_names(lines_of_interest)
 
     def group_transactions_by_account(
-        self,
-        transactions: List[Transaction],
-        account_names: Dict[int, str]
+        self, transactions: List[Transaction], account_names: Dict[int, str]
     ) -> List[Transaction]:
 
         logger.debug("Grouping transactions")
@@ -152,8 +154,7 @@ class CICParser(PdfParser):
 
         for transaction in transactions:
             transaction.account = account_names.get(
-                int(transaction.account),
-                "Unknown Account"
+                int(transaction.account), "Unknown Account"
             )
 
             if transaction.account == "Unknown Account":
@@ -201,15 +202,15 @@ class CICParser(PdfParser):
         Example: '1.234,56' → 1234.56
         """
         try:
-            return float(
-                value.replace(".", "").replace(",", ".")
-            )
+            return float(value.replace(".", "").replace(",", "."))
         except Exception:
             return 0.0
 
 
 if __name__ == "__main__":
-    file_test = r"C:\Users\peill\Documents\Python_Scripts\MySmartWallet\data\Extrait2311.pdf"
+    file_test = (
+        r"C:\Users\peill\Documents\Python_Scripts\MySmartWallet\data\Extrait2311.pdf"
+    )
 
     parser = CICParser()
     transactions = parser.extract_transaction_from_tables(file_test)

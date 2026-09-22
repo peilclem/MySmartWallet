@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from pathlib import Path
 import logging
 
+
 @dataclass(frozen=True)
 class AppConfig:
     """
@@ -14,6 +15,7 @@ class AppConfig:
 
     LOG_FILE: Path
     LOG_LEVEL: int
+
 
 def load_config() -> AppConfig:
     """
@@ -31,5 +33,6 @@ def load_config() -> AppConfig:
         LOG_FILE=Path(__file__).parents[2] / "logs" / "app.log",
         LOG_LEVEL=logging.DEBUG,
     )
+
 
 CONFIG = load_config()

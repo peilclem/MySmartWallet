@@ -107,7 +107,7 @@ class PdfParser(ABC):
     @abstractmethod
     def extract_account_names(self, file: str):
         """Extracts account names from the provided PDF file.
-        
+
         This method should be implemented by subclasses to handle the specific logic for extracting account names from the provided PDF file.
 
 
