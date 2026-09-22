@@ -2,8 +2,8 @@ from mysmartwallet.database.DatabaseManager import DatabaseManager
 
 
 class HistoryRepository:
-    """Manage connection with the history table in the database
-    """
+    """Manage connection with the history table in the database"""
+
     def __init__(self, db: DatabaseManager):
         """Initialize HistoryRepository
 
@@ -32,14 +32,7 @@ class HistoryRepository:
         VALUES (?, ?, ?)
         """
 
-        self.db.execute(
-            query,
-            (
-                account_id,
-                date,
-                balance
-            )
-        )
+        self.db.execute(query, (account_id, date, balance))
 
         self.db.commit()
 
@@ -70,7 +63,7 @@ class HistoryRepository:
 
     def fetch_all(self):
         """Fetch all history entries from the database
-        
+
         Returns
         -------
         list

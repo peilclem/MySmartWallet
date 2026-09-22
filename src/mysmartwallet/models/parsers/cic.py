@@ -1,162 +1,218 @@
+import logging
+from typing import List, Dict
+
 import pdfplumber
-import tabula
+import pandas as pd
 
 from mysmartwallet.models.parsers.base import PdfParser
 from mysmartwallet.models.transaction import Transaction
 
+logger = logging.getLogger(__name__)
+
 
 class CICParser(PdfParser):
-    """Parser for CIC bank reports
-    """
+    """Parser for CIC bank reports (PDF only, no Java dependency)."""
+
     def __init__(self):
-        """Initialize the CICParser
-        """
         super().__init__()
 
-    def extract_transaction_from_tables(self, file) -> list[Transaction]:
-        """Extract transactions from the pdf
-
-        Parameters
-        ----------
-        file : str
-            Pdf file to parse
-
-        Returns
-        -------
-        list[Transaction]
-            Transactions extracted from the pdf
+    def extract_tables(self, file: str) -> List[pd.DataFrame]:
         """
-        tables = tabula.read_pdf(file, pages='all', encoding='latin-1', multiple_tables=True)
-        transactions = []
-        
+        Extract tables from PDF using pdfplumber.
+        """
+        logger.debug("Extracting tables with pdfplumber", extra={"file": file})
+
+        tables = []
+
+        with pdfplumber.open(file) as pdf:
+            for page in pdf.pages:
+                extracted_tables = page.extract_tables()
+
+                for table in extracted_tables:
+                    if table:
+                        df = pd.DataFrame(table[1:], columns=table[0])
+                        tables.append(df)
+
+        return tables
+
+    def extract_transaction_from_tables(self, file: str) -> List[Transaction]:
+        """
+        Extract transactions from PDF.
+        """
+        logger.debug("Extracting transactions from PDF", extra={"file": file})
+
+        tables = self.extract_tables(file)
+        transactions: List[Transaction] = []
+
         for k, table in enumerate(tables[:-2]):
-            table = table.fillna('0')   
-            
+            table = table.fillna("0")
+
             for i in range(len(table)):
                 row = table.iloc[i]
                 t_dict = {}
 
-                if row.iloc[0] != '0':
-                    
-                    income = float(row.iloc[-1].replace('.','').replace(',', '.'))
-                    expense = float(row.iloc[-2].replace('.','').replace(',', '.'))
-                    t_dict["amount"] = income - expense 
-                    
-                    try:
-                        next_row = table.iloc[i+1]
-                        if next_row.iloc[0] == '0':
-                            t_dict["label"] = next_row.iloc[2]
-                        else:
+                try:
+                    if row.iloc[0] != "0":
+
+                        if "SOLDE CREDITEUR" in row["Date"] or "SOLDE DEBITEUR" in row["Opération"]:
+                            continue
+
+                        income = self._to_float(row.iloc[-1])
+                        expense = self._to_float(row.iloc[-2])
+
+                        t_dict["amount"] = income - expense
+
+                        try:
+                            next_row = table.iloc[i + 1]
+                            if next_row.iloc[0] == "0":
+                                t_dict["label"] = next_row.iloc[2]
+                            else:
+                                t_dict["label"] = row.iloc[2]
+                        except IndexError:
                             t_dict["label"] = row.iloc[2]
-                    except IndexError:
-                        t_dict["label"] = row.iloc[2]
 
-                    # To be implemented in TransactionService
-                    t_dict["category"] = None
+                        t_dict["date"] = self.str_to_date(row.iloc[0])
 
-                    if not 'SOLDE CREDITEUR' in t_dict['label']:
-                        date = row.iloc[0]
-                        t_dict["date"] = self.str_to_datetime(date).date()
-                        transactions.append(Transaction(**t_dict, account=f"{k}"))
+                        if not t_dict["date"]:
+                            t_dict["date"] = self.default_date
 
-                else:
+                        t_dict["category"] = "-" #FIXME: Assign default category ?
+
+                        transactions.append(
+                            Transaction(**t_dict, account=str(k))
+                        )
+
+                except Exception as e:
+                    logger.warning(
+                        "Skipping row due to parsing error",
+                        extra={"error": str(e)},
+                    )
                     continue
 
-        return transactions 
-    
-    def extract_account_names(self, file):
-        """Extract account names from the pdf
+        return transactions
 
-        Parameters
-        ----------
-        file : str
-            File to parse
-
-        Returns
-        -------
-        dict
-            Dictionnary of account names associated with table number
+    def extract_account_names(self, file: str) -> Dict[int, str]:
         """
+        Extract account names from PDF text.
+        """
+        logger.debug("Extracting account names", extra={"file": file})
+
         text = ""
+
         with pdfplumber.open(file) as pdf:
             for page in pdf.pages:
                 page_text = page.extract_text()
                 if page_text:
                     text += page_text + "\n"
 
-        text = text.split("\n")
+        lines = text.split("\n")
 
-        lines_of_interest, is_of_interest = [], False
-        for i, line in enumerate(text):
+        lines_of_interest = []
+        is_of_interest = False
+        try:
+            month_dict = {
+                "janvier": "01",
+                "février": "02",
+                "mars": "03",
+                "avril": "04",
+                "mai": "05",
+                "juin": "06",
+                "juillet": "07",
+                "août": "08",
+                "septembre": "09",
+                "octobre": "10",
+                "novembre": "11",
+                "décembre": "12"
+            }
+            date_str = lines[12].split(" ")  # Assuming the date is always on line 13
+            date_str[1] = month_dict.get(date_str[1].lower(), "01")  # Default to January if not found
+            self.default_date = self.str_to_date(f"{date_str[0]}/{date_str[1]}/{date_str[2]}")
+        except IndexError:
+            self.default_date = self.str_to_date("01/01/1900")
+
+        for line in lines:
             if is_of_interest:
                 lines_of_interest.append(line)
                 is_of_interest = False
-            if '€' in line:
+
+            if "€" in line:
                 is_of_interest = True
 
-        account_names = self.clean_account_names(lines_of_interest)
-        return account_names
-    
-    def group_transactions_by_account(self, transactions: list[Transaction], account_names: dict):
-        """Group all tranasactions by account
+        return self.clean_account_names(lines_of_interest)
 
-        Parameters
-        ----------
-        transactions : list[Transaction]
-            All transactions extracted from a pdf
-        account_names : dict
-            Dictionnary of account names associated with table number
+    def group_transactions_by_account(
+        self,
+        transactions: List[Transaction],
+        account_names: Dict[int, str]
+    ) -> List[Transaction]:
 
-        Returns
-        -------
-        list[Transaction]
-            All transactions with updated account_name
-        """
-        unknown_account = 0
+        logger.debug("Grouping transactions")
+
+        unknown_account_nb = 0
+
         for transaction in transactions:
-            transaction.account = account_names.get(int(transaction.account), "Unknown Account")
+            transaction.account = account_names.get(
+                int(transaction.account),
+                "Unknown Account"
+            )
+
             if transaction.account == "Unknown Account":
-                unknown_account += 1
-        print(f"Found {unknown_account} transactions with unknown account names.")
+                unknown_account_nb += 1
+
+        if unknown_account_nb > 0:
+            logger.warning(
+                "Found transactions with unknown account names",
+                extra={"unknown_account_transactions": unknown_account_nb},
+            )
+
         return transactions
-    
-    def clean_account_names(self, lines_of_interest: list) -> dict:
-        """Clean account names to unify
 
-        Parameters
-        ----------
-        lines_of_interest : list
-            Text from pdf that contains account name
+    def clean_account_names(self, lines_of_interest: List[str]) -> Dict[int, str]:
 
-        Returns
-        -------
-        dict
-            Dictionnary of account names associated with table number
-        """
-        account_names = {}
+        logger.debug("Cleaning account names")
+
+        account_names: Dict[int, str] = {}
         k = 0
-        for line in lines_of_interest:
 
-            if 'C/C' in line.upper():
-                account_names[k] = 'Compte Courant'
+        for line in lines_of_interest:
+            line_upper = line.upper()
+
+            if "C/C" in line_upper:
+                account_names[k] = "Compte Courant"
                 k += 1
-            elif 'LIVRET A' in line.upper():
-                account_names[k] = 'Livret A'
+
+            elif "LIVRET A" in line_upper:
+                account_names[k] = "Livret A"
                 k += 1
-            elif 'DURABLE SOLIDAIRE' in line.upper():
-                account_names[k] = 'LDDS'
+
+            elif "DURABLE SOLIDAIRE" in line_upper:
+                account_names[k] = "LDDS"
                 k += 1
-            elif 'LIVRET JEUNE' in line.upper():
-                account_names[k] = 'Livret JEUNE'
+
+            elif "LIVRET JEUNE" in line_upper:
+                account_names[k] = "Livret JEUNE"
                 k += 1
-            else:
-                continue
 
         return account_names
-    
+
+    def _to_float(self, value: str) -> float:
+        """
+        Convert CIC formatted string to float.
+        Example: '1.234,56' → 1234.56
+        """
+        try:
+            return float(
+                value.replace(".", "").replace(",", ".")
+            )
+        except Exception:
+            return 0.0
+
+
 if __name__ == "__main__":
-    file_test = r"C:\Users\peill\Documents\Python_Scripts\MySmartWallet\data\CIC\Extrait2407.pdf"
-    parser = CICParser(file_test)
-    transactions = parser.parse()
-    for transaction in transactions:
-        print(transaction)
+    file_test = r"C:\Users\peill\Documents\Python_Scripts\MySmartWallet\data\Extrait2311.pdf"
+
+    parser = CICParser()
+    transactions = parser.extract_transaction_from_tables(file_test)
+
+    for t in transactions:
+        print(t)

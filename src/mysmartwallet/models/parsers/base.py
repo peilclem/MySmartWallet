@@ -1,19 +1,22 @@
+import logging
 from abc import ABC, abstractmethod
-from datetime import datetime
+from datetime import datetime, date
 
 from mysmartwallet.models.transaction import Transaction
 
+logger = logging.getLogger(__name__)
 
-class PdfParser(ABC):   
+
+class PdfParser(ABC):
     """
     An abstract base class for parsing PDF files to extract financial transactions.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
+        """Initialize the PdfParser"""
         pass
 
-
-    def str_to_datetime(self, date_str:str) -> datetime:
+    def str_to_date(self, date_str: str) -> date | None:
         """Convert string date to datetime
 
         Parameters
@@ -23,15 +26,18 @@ class PdfParser(ABC):
 
         Returns
         -------
-        datetime
-            Date in datetime format
+        date
+            Date in date format
         """
         if isinstance(date_str, str):
             try:
-                return datetime.strptime(date_str, '%d/%m/%Y')
+                return datetime.strptime(date_str, "%d/%m/%Y").date()
             except ValueError:
+                logger.warning(
+                    "Invalid date format",
+                    extra={"date_str": date_str},
+                )
                 return None
-        return None
 
     def parse(self, pdf_file: str) -> list[Transaction]:
         """Parse a bank report
@@ -46,15 +52,20 @@ class PdfParser(ABC):
         list[Transaction]
             List of all transactions
         """
-        transactions_id = self.extract_transaction_from_tables(pdf_file)
-        account_names = self.extract_account_names(pdf_file)
+        logger.info("Parsing PDF", extra={"pdf_file": pdf_file})
 
-        transactions = self.group_transactions_by_account(transactions_id, account_names)
+        account_names = self.extract_account_names(pdf_file)
+        transactions_id = self.extract_transaction_from_tables(pdf_file)
+
+        transactions = self.group_transactions_by_account(
+            transactions_id, account_names
+        )
 
         return transactions
 
-
-    def group_transactions_by_account(self, transactions:list[Transaction], account_names:dict) -> list[Transaction]:
+    def group_transactions_by_account(
+        self, transactions: list[Transaction], account_names: dict
+    ) -> list[Transaction]:
         """Group transactions by account
 
         Parameters
@@ -69,15 +80,16 @@ class PdfParser(ABC):
         list[Transaction]
             All transactions with an associated account name
         """
+        logger.debug("Grouping transactions by account")
+
         for transaction in transactions:
             account_id = int(transaction.account)
             transaction.account = account_names.get(account_id, "Unknown Account")
 
         return transactions
-    
 
     @abstractmethod
-    def extract_transaction_from_tables(self, file:str) -> list[Transaction]:
+    def extract_transaction_from_tables(self, file: str) -> list[Transaction]:
         """Abstract method to extract transaction data from tables in a PDF file.
         This method should be implemented by subclasses to handle the specific logic for extracting transaction data from the provided PDF file.
 
@@ -93,8 +105,9 @@ class PdfParser(ABC):
         """
 
     @abstractmethod
-    def extract_account_names(self, file:str):
+    def extract_account_names(self, file: str):
         """Extracts account names from the provided PDF file.
+        
         This method should be implemented by subclasses to handle the specific logic for extracting account names from the provided PDF file.
 
 

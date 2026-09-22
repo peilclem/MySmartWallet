@@ -1,3 +1,5 @@
+import logging
+
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QStandardItem, QStandardItemModel
 from PySide6.QtWidgets import (
@@ -11,15 +13,16 @@ from PySide6.QtWidgets import (
 
 from mysmartwallet.models.transaction import Transaction
 
+logger = logging.getLogger(__name__)
+
 
 class TransactionWidget(QWidget):
-    """Transaction widget to display a table of transactions
-    """
+    """Transaction widget to display a table of transactions"""
+
     import_clicked = Signal(str)
 
     def __init__(self):
-        """Initialize the widget
-        """
+        """Initialize the widget"""
         super().__init__()
         self.setWindowTitle("Transaction Widget")
         self.setMinimumSize(600, 300)
@@ -27,10 +30,8 @@ class TransactionWidget(QWidget):
         self._setup_ui()
         self._connect_signals()
 
-
     def _setup_ui(self):
-        """Create the ui of the widget
-        """
+        """Create the ui of the widget"""
         layout = QVBoxLayout(self)
 
         self.title = QLabel("Transactions")
@@ -41,7 +42,9 @@ class TransactionWidget(QWidget):
         self.table = QTableView()
 
         self.model = QStandardItemModel()
-        self.model.setHorizontalHeaderLabels(["Date", "Account", "Label", "Amount", "Category"])
+        self.model.setHorizontalHeaderLabels(
+            ["Date", "Account", "Label", "Amount", "Category"]
+        )
         self.table.setModel(self.model)
 
         layout.addWidget(self.title)
@@ -49,19 +52,21 @@ class TransactionWidget(QWidget):
         layout.addWidget(self.table)
 
     def _connect_signals(self):
-        """Signal when button is clicked
-        """
+        """Signal when button is clicked"""
         self.import_button.clicked.connect(self._on_import_clicked)
 
     def _on_import_clicked(self):
-        """Action when file button is clicked
-        """
-        file_path = QFileDialog.getOpenFileName(self, "Select PDF File", "", "PDF Files (*.pdf)")
+        """Action when file button is clicked"""
+        logger.info("User clicked import button")
+        file_path = QFileDialog.getOpenFileName(
+            self, "Select PDF File", "", "PDF Files (*.pdf)"
+        )[0]
 
         if file_path:
-            self.import_clicked.emit(file_path[0])
+            logger.info("Selected PDF file for import", extra={"file_path": file_path})
+            self.import_clicked.emit(file_path)
 
-    def set_transactions(self, transactions:Transaction):
+    def set_transactions(self, transactions: list[Transaction]):
         """Fill table with imported transactions
 
         Parameters
@@ -77,12 +82,12 @@ class TransactionWidget(QWidget):
                 QStandardItem(str(t.account)),
                 QStandardItem(t.label),
                 QStandardItem(f"{t.amount:.2f}"),
-                QStandardItem(getattr(t, "category", ""))
+                QStandardItem(getattr(t, "category", "")),
             ]
 
             self.model.appendRow(row)
 
-    def refresh(self, transactions:list[Transaction]):
+    def refresh(self, transactions: list[Transaction]):
         """Refresh the view
 
         Parameters
@@ -91,4 +96,3 @@ class TransactionWidget(QWidget):
             Transactions to display
         """
         self.set_transactions(transactions=transactions)
-

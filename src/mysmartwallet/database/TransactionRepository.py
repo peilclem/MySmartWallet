@@ -1,10 +1,14 @@
+import logging
+
 from mysmartwallet.database.DatabaseManager import DatabaseManager
 from mysmartwallet.models.transaction import Transaction
 
+logger = logging.getLogger(__name__)
+
 
 class TransactionRepository:
-    """Object to manage connection with the transaction table in the database
-    """
+    """Object to manage connection with the transaction table in the database"""
+
     def __init__(self, db: DatabaseManager):
         """Initialize TransactionRepository
 
@@ -28,6 +32,16 @@ class TransactionRepository:
         (Date, Account_ID, Label, Amount, Category)
         VALUES (?, ?, ?, ?, ?)
         """
+        logger.debug(
+            "Adding transaction",
+            extra={
+                "date": transaction.date,
+                "account": transaction.account,
+                "label": transaction.label,
+                "amount": transaction.amount,
+                "category": getattr(transaction, "category", None),
+            },
+        )
 
         self.db.execute(
             query,
@@ -36,8 +50,8 @@ class TransactionRepository:
                 transaction.account,
                 transaction.label,
                 transaction.amount,
-                transaction.category
-            )
+                transaction.category,
+            ),
         )
 
         self.db.commit()
@@ -55,6 +69,7 @@ class TransactionRepository:
         (Date, Account_ID, Label, Amount, Category)
         VALUES (?, ?, ?, ?, ?)
         """
+        logger.info("Adding transactions in the database", extra={"count": len(transactions)})
 
         data = [
             (
@@ -62,7 +77,7 @@ class TransactionRepository:
                 transaction.account,
                 transaction.label,
                 transaction.amount,
-                transaction.category
+                transaction.category,
             )
             for transaction in transactions
         ]
@@ -72,34 +87,37 @@ class TransactionRepository:
 
     def get_all(self):
         """Fetch all transactions from the database
-        
+
         Returns
         -------
         list
             List of all transactions in the database
         """
+        logger.debug("Getting all transactions from the database")
+
         query = """SELECT * FROM Transactions ORDER BY Date DESC"""
         rows = self.db.fetch_all(query)
 
         return [
-        Transaction(
-            date=row[1],
-            account=row[2],
-            label=row[3],
-            amount=row[4],
-            category=row[5]
-        )
-        for row in rows
-    ]
+            Transaction(
+                date=row[1],
+                account=row[2],
+                label=row[3],
+                amount=row[4],
+                category=row[5],
+            )
+            for row in rows
+        ]
 
 
 if __name__ == "__main__":
     file_test = r"C:\Users\peill\Documents\Python_Scripts\MySmartWallet\data\CIC\Extrait2407.pdf"
     from mysmartwallet.models.parsers.cic import CICParser
-    from mysmartwallet.utils.app_config import CONFIG
-    DB_PATH = CONFIG.DATA_DIR + "MySmartWallet.db"
-    parser = CICParser(file_test)
-    transactions = parser.parse()
+    from mysmartwallet.config.config import CONFIG
+
+    DB_PATH = CONFIG.DATA_DIR / "MySmartWallet.db"
+    parser = CICParser()
+    transactions = parser.parse(file_test)
     repo = TransactionRepository(DatabaseManager(DB_PATH))
     repo.add_many(transactions)
 

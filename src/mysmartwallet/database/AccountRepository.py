@@ -1,9 +1,13 @@
+import logging
+
 from mysmartwallet.database.DatabaseManager import DatabaseManager
+
+logger = logging.getLogger(__name__)
 
 
 class AccountRepository:
-    """Object to manage connection with the account table in the database
-    """
+    """Object to manage connection with the account table in the database"""
+
     def __init__(self, db: DatabaseManager):
         """Initialize AccountRepository
 
@@ -14,7 +18,7 @@ class AccountRepository:
         """
         self.db = db
 
-    def add(self, user_id: int, bank_id: int, account_type: str):     
+    def add(self, user_id: int, bank_id: int, account_type: str):
         """Add a new account to the database
 
         Parameters
@@ -26,20 +30,17 @@ class AccountRepository:
         account_type : str
             Type of the account
         """
+        logger.info(
+            "Adding account",
+            extra={"user_id": user_id, "bank_id": bank_id, "account_type": account_type},
+        )
         query = """
         INSERT INTO Accounts
         (User_id, Bank_ID, Type)
         VALUES (?, ?, ?)
         """
 
-        self.db.execute(
-            query,
-            (
-                user_id,
-                bank_id,
-                account_type
-            )
-        )
+        self.db.execute(query, (user_id, bank_id, account_type))
 
         self.db.commit()
 
@@ -60,6 +61,10 @@ class AccountRepository:
         bool
             True if the account exists, False otherwise
         """
+        logger.debug(
+            "Checking account existence",
+            extra={"user_id": user_id, "bank_id": bank_id, "account_type": account_type},
+        )
         query = """
         SELECT * FROM Accounts
         WHERE User_id = ? AND Bank_ID = ? AND Type = ?
@@ -72,12 +77,13 @@ class AccountRepository:
 
     def fetch_all(self):
         """Fetch all accounts from the database
-        
+
         Returns
         -------
         list
             List of all accounts in the database
         """
+        logger.debug("Fetching all accounts")
         query = """SELECT * FROM Accounts"""
         rows = self.db.fetch_all(query)
         return rows

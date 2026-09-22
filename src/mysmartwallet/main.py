@@ -1,3 +1,5 @@
+import logging
+
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QApplication
 
@@ -6,43 +8,35 @@ from mysmartwallet.database.DatabaseManager import DatabaseManager
 from mysmartwallet.database.TransactionRepository import TransactionRepository
 from mysmartwallet.models.parsers.cic import CICParser
 from mysmartwallet.services.transaction_service import TransactionService
-from mysmartwallet.utils.app_config import CONFIG
+from mysmartwallet.utils.log_mgr import init_logger
 from mysmartwallet.views.transaction_widget import TransactionWidget
 
+from mysmartwallet.config.config import CONFIG
 
 def main():
+    
+    # Configure logging after CONFIG is loaded and before anything else logs.
+    init_logger(level=CONFIG.LOG_LEVEL)
+
+    logger = logging.getLogger(__name__)
+    logger.info("App started")
+    logger.debug("DEBUG mode")
+    
     app = QApplication([])
     app.setWindowIcon(QIcon("resources/icons/msw_logo.png"))
 
-    # -------------------
-    # Infrastructure
-    # -------------------
     db = DatabaseManager(CONFIG.DB_PATH)
     transaction_repository = TransactionRepository(db)
-
-    # -------------------
-    # Services
-    # -------------------
     transaction_service = TransactionService(transaction_repository)
-
-    # -------------------
-    # Parser
-    # -------------------
     parser = CICParser()
 
-    # -------------------
-    # View
-    # -------------------
     view = TransactionWidget()
 
-    # -------------------
-    # Controller
-    # -------------------
-    TransactionController(
+    controller = TransactionController(
         view=view,
         parser=parser,
         transaction_service=transaction_service,
-        transaction_repository=transaction_repository
+        transaction_repository=transaction_repository,
     )
 
     view.show()

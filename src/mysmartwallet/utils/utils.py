@@ -1,5 +1,5 @@
-import os
 import sys
+from pathlib import Path
 
 
 def get_base_path():
@@ -10,11 +10,12 @@ def get_base_path():
     str
         Base path of the projet
     """
-    if getattr(sys, 'frozen', False):
-        base_path = os.path.dirname(sys.executable)
-    else:
-        base_path = os.path.dirname(__file__)
-    return base_path
+
+    if getattr(sys, "frozen", False):
+        return Path(sys.executable).parent
+
+    return Path(__file__).resolve().parents[3]
+
 
 def get_config_path():
     """Get config file path
@@ -25,12 +26,11 @@ def get_config_path():
         Path of the config file
     """
     base_path = get_base_path()
-    if getattr(sys, 'frozen', False):
-        config_path = os.path.join(base_path, "config.ini")
-    else:
-        config_path = os.path.join(base_path, '..', '..', '..', 'config', 'config.ini')
-    return config_path
+    if getattr(sys, "frozen", False):
+        return base_path / "config.ini"
+    return base_path / "config/config.ini"
+
 
 if __name__ == "__main__":
-    config_dir = os.path.dirname(get_config_path())
-    print(config_dir, os.listdir(config_dir))
+    print(get_base_path())
+    print(get_config_path())

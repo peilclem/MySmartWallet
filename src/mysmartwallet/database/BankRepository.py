@@ -2,8 +2,8 @@ from mysmartwallet.database.DatabaseManager import DatabaseManager
 
 
 class BankRepository:
-    """Object to manage connection with the bank table in the database
-    """
+    """Object to manage connection with the bank table in the database"""
+
     def __init__(self, db: DatabaseManager):
         """Initialize BankRepository
 
@@ -28,12 +28,7 @@ class BankRepository:
         VALUES (?)
         """
 
-        self.db.execute(
-            query,
-            (
-                bank_name
-            )
-        )
+        self.db.execute(query, (bank_name))
 
         self.db.commit()
 
