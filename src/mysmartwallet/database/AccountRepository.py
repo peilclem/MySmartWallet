@@ -30,7 +30,10 @@ class AccountRepository:
         account_type : str
             Type of the account
         """
-        logger.debug(f"Adding account {bank_id}-{account_type} in the database")
+        logger.info(
+            "Adding account",
+            extra={"user_id": user_id, "bank_id": bank_id, "account_type": account_type},
+        )
         query = """
         INSERT INTO Accounts
         (User_id, Bank_ID, Type)
@@ -58,7 +61,10 @@ class AccountRepository:
         bool
             True if the account exists, False otherwise
         """
-        logger.debug("Checking if {bank_id}-{account_type} alreaady exists")
+        logger.debug(
+            "Checking account existence",
+            extra={"user_id": user_id, "bank_id": bank_id, "account_type": account_type},
+        )
         query = """
         SELECT * FROM Accounts
         WHERE User_id = ? AND Bank_ID = ? AND Type = ?

@@ -57,13 +57,13 @@ class TransactionWidget(QWidget):
 
     def _on_import_clicked(self):
         """Action when file button is clicked"""
-        logger.debug("Import button clicked")
+        logger.info("User clicked import button")
         file_path = QFileDialog.getOpenFileName(
             self, "Select PDF File", "", "PDF Files (*.pdf)"
         )[0]
 
         if file_path:
-            logger.debug(f"_on_import_clicked: emitting from widget id={id(self)}")
+            logger.info("Selected PDF file for import", extra={"file_path": file_path})
             self.import_clicked.emit(file_path)
 
     def set_transactions(self, transactions: list[Transaction]):

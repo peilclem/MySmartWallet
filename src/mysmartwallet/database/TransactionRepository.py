@@ -32,7 +32,16 @@ class TransactionRepository:
         (Date, Account_ID, Label, Amount, Category)
         VALUES (?, ?, ?, ?, ?)
         """
-        logger.debug(f"Adding {transaction.label} in the database")
+        logger.debug(
+            "Adding transaction",
+            extra={
+                "date": transaction.date,
+                "account": transaction.account,
+                "label": transaction.label,
+                "amount": transaction.amount,
+                "category": getattr(transaction, "category", None),
+            },
+        )
 
         self.db.execute(
             query,
@@ -60,7 +69,7 @@ class TransactionRepository:
         (Date, Account_ID, Label, Amount, Category)
         VALUES (?, ?, ?, ?, ?)
         """
-        logger.info(f"Adding {len(transactions)} transactions in the database")
+        logger.info("Adding transactions in the database", extra={"count": len(transactions)})
 
         data = [
             (
@@ -84,7 +93,7 @@ class TransactionRepository:
         list
             List of all transactions in the database
         """
-        logger.debug("Get all transactions in the database")
+        logger.debug("Getting all transactions from the database")
 
         query = """SELECT * FROM Transactions ORDER BY Date DESC"""
         rows = self.db.fetch_all(query)

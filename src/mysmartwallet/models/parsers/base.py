@@ -33,7 +33,10 @@ class PdfParser(ABC):
             try:
                 return datetime.strptime(date_str, "%d/%m/%Y").date()
             except ValueError:
-                logger.warning(f"Invalid date format: {date_str}")
+                logger.warning(
+                    "Invalid date format",
+                    extra={"date_str": date_str},
+                )
                 return None
 
     def parse(self, pdf_file: str) -> list[Transaction]:
@@ -49,7 +52,7 @@ class PdfParser(ABC):
         list[Transaction]
             List of all transactions
         """
-        logger.debug(f"Parsing {pdf_file}")
+        logger.info("Parsing PDF", extra={"pdf_file": pdf_file})
 
         account_names = self.extract_account_names(pdf_file)
         transactions_id = self.extract_transaction_from_tables(pdf_file)

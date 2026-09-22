@@ -20,7 +20,7 @@ class CICParser(PdfParser):
         """
         Extract tables from PDF using pdfplumber.
         """
-        logger.debug(f"Extracting tables with pdfplumber from {file}")
+        logger.debug("Extracting tables with pdfplumber", extra={"file": file})
 
         tables = []
 
@@ -39,7 +39,7 @@ class CICParser(PdfParser):
         """
         Extract transactions from PDF.
         """
-        logger.debug(f"Extracting transactions from {file}")
+        logger.debug("Extracting transactions from PDF", extra={"file": file})
 
         tables = self.extract_tables(file)
         transactions: List[Transaction] = []
@@ -83,7 +83,10 @@ class CICParser(PdfParser):
                         )
 
                 except Exception as e:
-                    logger.warning(f"Skipping row due to error: {e}")
+                    logger.warning(
+                        "Skipping row due to parsing error",
+                        extra={"error": str(e)},
+                    )
                     continue
 
         return transactions
@@ -92,7 +95,7 @@ class CICParser(PdfParser):
         """
         Extract account names from PDF text.
         """
-        logger.debug(f"Extracting account names from {file}")
+        logger.debug("Extracting account names", extra={"file": file})
 
         text = ""
 
@@ -158,7 +161,8 @@ class CICParser(PdfParser):
 
         if unknown_account_nb > 0:
             logger.warning(
-                f"Found {unknown_account_nb} transactions with unknown account names."
+                "Found transactions with unknown account names",
+                extra={"unknown_account_transactions": unknown_account_nb},
             )
 
         return transactions
