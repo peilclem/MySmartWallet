@@ -1,8 +1,7 @@
 import logging
-from typing import List, Dict
 
-import pdfplumber
 import pandas as pd
+import pdfplumber
 
 from mysmartwallet.models.parsers.base import PdfParser
 from mysmartwallet.models.transaction import Transaction
@@ -16,7 +15,7 @@ class CICParser(PdfParser):
     def __init__(self):
         super().__init__()
 
-    def extract_tables(self, file: str) -> List[pd.DataFrame]:
+    def extract_tables(self, file: str) -> list[pd.DataFrame]:
         """
         Extract tables from PDF using pdfplumber.
         """
@@ -35,14 +34,14 @@ class CICParser(PdfParser):
 
         return tables
 
-    def extract_transaction_from_tables(self, file: str) -> List[Transaction]:
+    def extract_transaction_from_tables(self, file: str) -> list[Transaction]:
         """
         Extract transactions from PDF.
         """
         logger.debug("Extracting transactions from PDF", extra={"file": file})
 
         tables = self.extract_tables(file)
-        transactions: List[Transaction] = []
+        transactions: list[Transaction] = []
 
         for k, table in enumerate(tables[:-2]):
             table = table.fillna("0")
@@ -91,7 +90,7 @@ class CICParser(PdfParser):
 
         return transactions
 
-    def extract_account_names(self, file: str) -> Dict[int, str]:
+    def extract_account_names(self, file: str) -> dict[int, str]:
         """
         Extract account names from PDF text.
         """
@@ -145,8 +144,8 @@ class CICParser(PdfParser):
         return self.clean_account_names(lines_of_interest)
 
     def group_transactions_by_account(
-        self, transactions: List[Transaction], account_names: Dict[int, str]
-    ) -> List[Transaction]:
+        self, transactions: list[Transaction], account_names: dict[int, str]
+    ) -> list[Transaction]:
 
         logger.debug("Grouping transactions")
 
@@ -168,11 +167,11 @@ class CICParser(PdfParser):
 
         return transactions
 
-    def clean_account_names(self, lines_of_interest: List[str]) -> Dict[int, str]:
+    def clean_account_names(self, lines_of_interest: list[str]) -> dict[int, str]:
 
         logger.debug("Cleaning account names")
 
-        account_names: Dict[int, str] = {}
+        account_names: dict[int, str] = {}
         k = 0
 
         for line in lines_of_interest:

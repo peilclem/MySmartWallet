@@ -1,6 +1,6 @@
 import logging
 from abc import ABC, abstractmethod
-from datetime import datetime, date
+from datetime import date, datetime
 
 from mysmartwallet.models.transaction import Transaction
 
@@ -14,7 +14,6 @@ class PdfParser(ABC):
 
     def __init__(self) -> None:
         """Initialize the PdfParser"""
-        pass
 
     def str_to_date(self, date_str: str) -> date | None:
         """Convert string date to datetime

@@ -1,6 +1,6 @@
+import logging
 from dataclasses import dataclass
 from pathlib import Path
-import logging
 
 
 @dataclass(frozen=True)

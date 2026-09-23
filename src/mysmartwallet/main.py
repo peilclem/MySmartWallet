@@ -3,6 +3,7 @@ import logging
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QApplication
 
+from mysmartwallet.config.config import CONFIG
 from mysmartwallet.controllers.transaction_controller import TransactionController
 from mysmartwallet.database.DatabaseManager import DatabaseManager
 from mysmartwallet.database.TransactionRepository import TransactionRepository
@@ -10,8 +11,6 @@ from mysmartwallet.models.parsers.cic import CICParser
 from mysmartwallet.services.transaction_service import TransactionService
 from mysmartwallet.utils.log_mgr import init_logger
 from mysmartwallet.views.transaction_widget import TransactionWidget
-
-from mysmartwallet.config.config import CONFIG
 
 
 def main():
@@ -33,7 +32,7 @@ def main():
 
     view = TransactionWidget()
 
-    controller = TransactionController(
+    controller = TransactionController(  # noqa: F841
         view=view,
         parser=parser,
         transaction_service=transaction_service,
