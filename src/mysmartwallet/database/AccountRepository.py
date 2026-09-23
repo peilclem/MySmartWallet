@@ -40,7 +40,7 @@ class AccountRepository:
         )
         query = """
         INSERT INTO Accounts
-        (User_id, Bank_ID, Type)
+        (User_ID, Bank_ID, Type)
         VALUES (?, ?, ?)
         """
 
@@ -75,7 +75,7 @@ class AccountRepository:
         )
         query = """
         SELECT * FROM Accounts
-        WHERE User_id = ? AND Bank_ID = ? AND Type = ?
+        WHERE User_ID = ? AND Bank_ID = ? AND Type = ?
         """
 
         cursor = self.db.execute(query, (user_id, bank_id, account_type))
