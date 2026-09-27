@@ -29,7 +29,7 @@ class TransactionRepository:
         """
         query = """
         INSERT INTO Transactions
-        (Date, Account_ID, Label, Amount, Category)
+        (Date, Account_id, Label, Amount, Category)
         VALUES (?, ?, ?, ?, ?)
         """
         logger.debug(
@@ -66,7 +66,7 @@ class TransactionRepository:
         """
         query = """
         INSERT INTO Transactions
-        (Date, Account_ID, Label, Amount, Category)
+        (Date, Account_id, Label, Amount, Category)
         VALUES (?, ?, ?, ?, ?)
         """
         logger.info(

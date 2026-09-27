@@ -219,7 +219,7 @@ Ideas for the next iterations:
    - Replace the sign-based categorization with rule-based categories keyed on label/merchant.
 
 3. **Add transaction deduplication**
-   - Add a `UNIQUE` constraint (e.g., `(Account_ID, Date, Label, Amount)`) or check before insert.
+   - Add a `UNIQUE` constraint (e.g., `(Account_id, Date, Label, Amount)`) or check before insert.
 
 4. **Expand the UI**
    - Filters (by account/category/date)

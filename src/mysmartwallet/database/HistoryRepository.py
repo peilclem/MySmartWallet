@@ -28,7 +28,7 @@ class HistoryRepository:
         """
         query = """
         INSERT INTO History
-        (Account_ID, Date, Balance)
+        (Account_id, Date, Balance)
         VALUES (?, ?, ?)
         """
 
@@ -53,7 +53,7 @@ class HistoryRepository:
         """
         query = """
         SELECT * FROM History
-        WHERE Account_ID = ? AND Date = ?
+        WHERE Account_id = ? AND Date = ?
         """
 
         cursor = self.db.execute(query, (account_id, date))
