@@ -4,6 +4,7 @@
 data/
 
 docs/_build/
+*.pptx
 
 build/
 dist/
