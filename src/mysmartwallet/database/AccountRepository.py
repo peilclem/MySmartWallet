@@ -18,21 +18,21 @@ class AccountRepository:
         """
         self.db = db
 
-    def add(self, user_id: int, bank_id: int, account_type: str):
+    def add(self, userId: int, bankId: int, accountType: str):
         """Add a new account to the database
 
         Parameters
         ----------
-        user_id : int
+        userId : int
             ID of the user to whom the account belongs
-        bank_id : int
+        bankId : int
             ID of the bank to which the account belongs
-        account_type : str
+        accountType : str
             Type of the account
         """
         logger.info(
             "Adding account",
-            extra={"user_id": user_id, "bank_id": bank_id, "account_type": account_type},
+            extra={"userId": userId, "bankId": bankId, "accountType": accountType},
         )
         query = """
         INSERT INTO Accounts
@@ -40,20 +40,20 @@ class AccountRepository:
         VALUES (?, ?, ?)
         """
 
-        self.db.execute(query, (user_id, bank_id, account_type))
+        self.db.execute(query, (userId, bankId, accountType))
 
         self.db.commit()
 
-    def check_account_existence(self, user_id: int, bank_id: int, account_type: str):
+    def checkAccountExistence(self, userId: int, bankId: int, accountType: str):
         """Check if an account exists in the database
 
         Parameters
         ----------
-        user_id : int
+        userId : int
             ID of the user to whom the account belongs
-        bank_id : int
+        bankId : int
             ID of the bank to which the account belongs
-        account_type : str
+        accountType : str
             Type of the account
 
         Returns
@@ -63,19 +63,19 @@ class AccountRepository:
         """
         logger.debug(
             "Checking account existence",
-            extra={"user_id": user_id, "bank_id": bank_id, "account_type": account_type},
+            extra={"userId": userId, "bankId": bankId, "accountType": accountType},
         )
         query = """
         SELECT * FROM Accounts
         WHERE User_id = ? AND Bank_ID = ? AND Type = ?
         """
 
-        cursor = self.db.execute(query, (user_id, bank_id, account_type))
+        cursor = self.db.execute(query, (userId, bankId, accountType))
         result = cursor.fetchone()
 
         return result is not None
 
-    def fetch_all(self):
+    def fetchAll(self):
         """Fetch all accounts from the database
 
         Returns
@@ -85,5 +85,5 @@ class AccountRepository:
         """
         logger.debug("Fetching all accounts")
         query = """SELECT * FROM Accounts"""
-        rows = self.db.fetch_all(query)
+        rows = self.db.fetchAll(query)
         return rows

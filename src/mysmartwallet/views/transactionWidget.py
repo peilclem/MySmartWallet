@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 class TransactionWidget(QWidget):
     """Transaction widget to display a table of transactions"""
 
-    import_clicked = Signal(str)
+    importClicked = Signal(str)
 
     def __init__(self):
         """Initialize the widget"""
@@ -27,17 +27,17 @@ class TransactionWidget(QWidget):
         self.setWindowTitle("Transaction Widget")
         self.setMinimumSize(600, 300)
 
-        self._setup_ui()
-        self._connect_signals()
+        self._setupUi()
+        self._connectSignals()
 
-    def _setup_ui(self):
+    def _setupUi(self):
         """Create the ui of the widget"""
         layout = QVBoxLayout(self)
 
         self.title = QLabel("Transactions")
         self.title.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        self.import_button = QPushButton("Import Transactions")
+        self.importButton = QPushButton("Import Transactions")
 
         self.table = QTableView()
 
@@ -48,25 +48,25 @@ class TransactionWidget(QWidget):
         self.table.setModel(self.model)
 
         layout.addWidget(self.title)
-        layout.addWidget(self.import_button)
+        layout.addWidget(self.importButton)
         layout.addWidget(self.table)
 
-    def _connect_signals(self):
+    def _connectSignals(self):
         """Signal when button is clicked"""
-        self.import_button.clicked.connect(self._on_import_clicked)
+        self.importButton.clicked.connect(self._onImportClicked)
 
-    def _on_import_clicked(self):
+    def _onImportClicked(self):
         """Action when file button is clicked"""
         logger.info("User clicked import button")
-        file_path = QFileDialog.getOpenFileName(
+        filePath = QFileDialog.getOpenFileName(
             self, "Select PDF File", "", "PDF Files (*.pdf)"
         )[0]
 
-        if file_path:
-            logger.info("Selected PDF file for import", extra={"file_path": file_path})
-            self.import_clicked.emit(file_path)
+        if filePath:
+            logger.info("Selected PDF file for import", extra={"filePath": filePath})
+            self.importClicked.emit(filePath)
 
-    def set_transactions(self, transactions: list[Transaction]):
+    def setTransactions(self, transactions: list[Transaction]):
         """Fill table with imported transactions
 
         Parameters
@@ -95,4 +95,4 @@ class TransactionWidget(QWidget):
         transactions : list[Transaction]
             Transactions to display
         """
-        self.set_transactions(transactions=transactions)
+        self.setTransactions(transactions=transactions)

@@ -56,7 +56,7 @@ class TransactionRepository:
 
         self.db.commit()
 
-    def add_many(self, transactions: list[Transaction]):
+    def addMany(self, transactions: list[Transaction]):
         """Add multiple transactions to the database
 
         Parameters
@@ -82,10 +82,10 @@ class TransactionRepository:
             for transaction in transactions
         ]
 
-        self.db.executemany(query, data)
+        self.db.executeMany(query, data)
         self.db.commit()
 
-    def get_all(self):
+    def getAll(self):
         """Fetch all transactions from the database
 
         Returns
@@ -96,7 +96,7 @@ class TransactionRepository:
         logger.debug("Getting all transactions from the database")
 
         query = """SELECT * FROM Transactions ORDER BY Date DESC"""
-        rows = self.db.fetch_all(query)
+        rows = self.db.fetchAll(query)
 
         return [
             Transaction(
@@ -111,14 +111,14 @@ class TransactionRepository:
 
 
 if __name__ == "__main__":
-    file_test = r"C:\Users\peill\Documents\Python_Scripts\MySmartWallet\data\CIC\Extrait2407.pdf"
+    fileTest = r"C:\Users\peill\Documents\Python_Scripts\MySmartWallet\data\CIC\Extrait2407.pdf"
     from mysmartwallet.models.parsers.cic import CICParser
     from mysmartwallet.config.config import CONFIG
 
     DB_PATH = CONFIG.DATA_DIR / "MySmartWallet.db"
     parser = CICParser()
-    transactions = parser.parse(file_test)
+    transactions = parser.parse(fileTest)
     repo = TransactionRepository(DatabaseManager(DB_PATH))
-    repo.add_many(transactions)
-
-    print(repo.get_all())
+    repo.addMany(transactions)
+ 
+    print(repo.getAll())

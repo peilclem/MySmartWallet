@@ -1,6 +1,7 @@
+from mysmartwallet.database.TransactionRepository import TransactionRepository
 import logging
 
-from mysmartwallet.database import TransactionRepository
+
 from mysmartwallet.models.transaction import Transaction
 
 logger = logging.getLogger(__name__)
@@ -9,17 +10,17 @@ logger = logging.getLogger(__name__)
 class TransactionService:
     """Holds the services like checking if transaction is valid, do categorization, etc."""
 
-    def __init__(self, transaction_repository: TransactionRepository):
+    def __init__(self, transactionRepository: TransactionRepository):
         """Initialize TransactionService
 
         Parameters
         ----------
-        transaction_repository : TransactionRepository
-            TransactionRepository that manages connection with transaction tanle
+        transactionRepository : TransactionRepository
+            TransactionRepository that manages connection with transaction table
         """
-        self.transaction_repository = transaction_repository
+        self.transactionRepository = transactionRepository
 
-    def import_transactions(self, transactions: list[Transaction]):
+    def importTransactions(self, transactions: list[Transaction]):
         """Clean transaction labels
 
         Parameters
@@ -29,17 +30,17 @@ class TransactionService:
         """
         logger.info("Importing transactions", extra={"count": len(transactions)})
 
-        cleaned_transactions = []
+        cleanedTransactions = []
         for t in transactions:
-            if not self._is_valid_transaction(t):
+            if not self.isValidTransaction(t):
                 continue
-            t = self._normalize_transaction(t)
-            t.category = self._categorize_transaction(t)
-            cleaned_transactions.append(t)
+            t = self._normalizeTransaction(t)
+            t.category = self._categorizeTransaction(t)
+            cleanedTransactions.append(t)
 
-        self.transaction_repository.add_many(cleaned_transactions)
+        self.transactionRepository.addMany(cleanedTransactions)
 
-    def _is_valid_transaction(self, transaction: Transaction):
+    def isValidTransaction(self, transaction: Transaction):
         """Check if amount is not null
 
         Parameters
@@ -54,7 +55,7 @@ class TransactionService:
         """
         return transaction.amount != 0
 
-    def _normalize_transaction(self, transaction: Transaction) -> Transaction:
+    def _normalizeTransaction(self, transaction: Transaction) -> Transaction:
         """Clean transaction labels
 
         Parameters
@@ -68,13 +69,13 @@ class TransactionService:
             Cleaned transaction
         """
         transaction.label = transaction.label.strip()
-        text_to_remove = ["CARTE 1685", "CARTE 7581"]
-        for text in text_to_remove:
+        textToRemove = ["CARTE 1685", "CARTE 7581"]
+        for text in textToRemove:
             if text in transaction.label.upper():
                 transaction.label = transaction.label.upper().replace(text, "").strip()
         return transaction
 
-    def _categorize_transaction(self, transaction: Transaction):
+    def _categorizeTransaction(self, transaction: Transaction):
         """Dumb categorization
 
         Parameters

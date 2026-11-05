@@ -6,7 +6,7 @@ from mysmartwallet.config.config import CONFIG
 logger = logging.getLogger(__name__)
 
 
-def create_database():
+def createDatabase():
     """
     Create tables of the database
     """
@@ -73,4 +73,4 @@ def create_database():
 
 
 if __name__ == "__main__":
-    create_database()
+    createDatabase()
