@@ -16,7 +16,7 @@ class CenteredFormatter(logging.Formatter):
         return super().format(record)
 
 
-def init_logger(log_file: str = "logs/app.log", level=CONFIG.LOG_LEVEL):
+def initLogger(logFile: str = "logs/app.log", level=CONFIG.LOG_LEVEL):
     # Création dossier logs si nécessaire
     Path("logs").mkdir(exist_ok=True)
 
@@ -26,22 +26,22 @@ def init_logger(log_file: str = "logs/app.log", level=CONFIG.LOG_LEVEL):
     )
 
     # Console handler
-    console_handler = logging.StreamHandler(sys.stdout)
-    console_handler.setLevel(level)
-    console_handler.setFormatter(formatter)
+    consoleHandler = logging.StreamHandler(sys.stdout)
+    consoleHandler.setLevel(level)
+    consoleHandler.setFormatter(formatter)
 
     # File handler
-    file_handler = logging.FileHandler(log_file, encoding="utf-8")
-    file_handler.setLevel(logging.INFO)
-    file_handler.setFormatter(formatter)
+    fileHandler = logging.FileHandler(logFile, encoding="utf-8")
+    fileHandler.setLevel(logging.INFO)
+    fileHandler.setFormatter(formatter)
 
     # Root logger
-    root_logger = logging.getLogger()
-    root_logger.setLevel(level)
-    root_logger.handlers.clear()
+    rootLogger = logging.getLogger()
+    rootLogger.setLevel(level)
+    rootLogger.handlers.clear()
 
-    root_logger.addHandler(console_handler)
-    root_logger.addHandler(file_handler)
+    rootLogger.addHandler(consoleHandler)
+    rootLogger.addHandler(fileHandler)
 
     # Remove DEBUG logs from libraries
     NOISY_LIBS = [
@@ -57,4 +57,4 @@ def init_logger(log_file: str = "logs/app.log", level=CONFIG.LOG_LEVEL):
         logging.getLogger(lib).setLevel(logging.WARNING)
 
     # Optionnel: éviter doublons si reload
-    root_logger.propagate = False
+    rootLogger.propagate = False

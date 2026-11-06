@@ -2,8 +2,8 @@ import logging
 
 from mysmartwallet.database.TransactionRepository import TransactionRepository
 from mysmartwallet.models.parsers.base import PdfParser
-from mysmartwallet.services.transaction_service import TransactionService
-from mysmartwallet.views.transaction_widget import TransactionWidget
+from mysmartwallet.services.transactionService import TransactionService
+from mysmartwallet.views.transactionWidget import TransactionWidget
 
 logger = logging.getLogger(__name__)
 
@@ -17,8 +17,8 @@ class TransactionController:
         self,
         view: TransactionWidget,
         parser: PdfParser,
-        transaction_service: TransactionService,
-        transaction_repository: TransactionRepository,
+        transactionService: TransactionService,
+        transactionRepository: TransactionRepository,
     ):
         """Instanciate the transaction controller widget
 
@@ -28,51 +28,51 @@ class TransactionController:
             View for displaying and interacting with transactions.
         parser : PdfParser
             Parser for extracting transaction data from PDF files.
-        transaction_service : TransactionService
+        transactionService : TransactionService
             Service for handling transaction-related business logic.
-        transaction_repository : TransactionRepository
+        transactionRepository : TransactionRepository
             Repository for managing transaction data persistence.
         """
         self.view = view
         self.parser = parser
-        self.transaction_service = transaction_service
-        self.transaction_repository = transaction_repository
+        self.transactionService = transactionService
+        self.transactionRepository = transactionRepository
 
-        self.load_transactions_into_view()
+        self.loadTransactionsIntoView()
 
-        self.view.import_clicked.connect(self.import_transactions)
+        self.view.importClicked.connect(self.importTransactions)
 
-    def import_transactions(self, file_path: str):
+    def importTransactions(self, filePath: str):
         """Get transactions from a pdf imported by the user
 
         Parameters
         ----------
-        file_path : str
+        filePath : str
         """
-        logger.info("Importing transactions from PDF", extra={"file_path": file_path})
+        logger.info("Importing transactions from PDF", extra={"filePath": filePath})
         try:
-            transactions = self.parser.parse(file_path)
+            transactions = self.parser.parse(filePath)
             logger.info(
                 "Parsed transactions",
                 extra={"count": len(transactions)},
             )
 
-            self.transaction_service.import_transactions(transactions)
+            self.transactionService.importTransactions(transactions)
             logger.info("Transactions persisted and service completed")
-
-            self.load_transactions_into_view()
+ 
+            self.loadTransactionsIntoView()
         except Exception:
             import traceback
 
             logger.exception(
                 "Failed to import transactions from PDF",
-                extra={"file_path": file_path},
+                extra={"filePath": filePath},
             )
             logger.error(traceback.format_exc())
 
-    def load_transactions_into_view(self):
+    def loadTransactionsIntoView(self):
         """Send transactions to transaction view"""
-        transactions = self.transaction_repository.get_all()
+        transactions = self.transactionRepository.getAll()
         logger.info(
             "Loaded transactions into view",
             extra={"count": len(transactions)},

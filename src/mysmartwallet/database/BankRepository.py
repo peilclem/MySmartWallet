@@ -14,12 +14,12 @@ class BankRepository:
         """
         self.db = db
 
-    def add(self, bank_name):
+    def add(self, bankName):
         """Add a new bank to the database
 
         Parameters
         ----------
-        bank_name : str
+        bankName : str
             Name of the bank to be added
         """
         query = """
@@ -28,16 +28,16 @@ class BankRepository:
         VALUES (?)
         """
 
-        self.db.execute(query, (bank_name))
+        self.db.execute(query, (bankName))
 
         self.db.commit()
 
-    def check_bank_existence(self, bank_name):
+    def checkBankExistence(self, bankName):
         """Check if a bank exists in the database
 
         Parameters
         ----------
-        bank_name : str
+        bankName : str
             Name of the bank to check
 
         Returns
@@ -49,13 +49,13 @@ class BankRepository:
         SELECT * FROM Banks
         WHERE Bank_name = ?
         """
-
-        cursor = self.db.execute(query, (bank_name,))
+        cursor = self.db.execute(query, (bankName,))
+        cursor = self.db.execute(query, (bankName,))
         result = cursor.fetchone()
 
         return result is not None
 
-    def fetch_all(self):
+    def fetchAll(self):
         """Fetch all banks from the database
 
         Returns
@@ -64,5 +64,5 @@ class BankRepository:
             List of all banks in the database
         """
         query = """SELECT * FROM Banks"""
-        rows = self.db.fetch_all(query)
+        rows = self.db.fetchAll(query)
         return rows

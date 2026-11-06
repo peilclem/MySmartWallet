@@ -14,12 +14,12 @@ class HistoryRepository:
         """
         self.db = db
 
-    def add(self, account_id: int, date: str, balance: float):
+    def add(self, accountId: int, date: str, balance: float):
         """Add a new history entry to the database
 
         Parameters
         ----------
-        account_id : int
+        accountId : int
             ID of the account
         date : str
             Date of the history entry
@@ -32,16 +32,16 @@ class HistoryRepository:
         VALUES (?, ?, ?)
         """
 
-        self.db.execute(query, (account_id, date, balance))
+        self.db.execute(query, (accountId, date, balance))
 
         self.db.commit()
 
-    def check_history_existence(self, account_id: int, date: str):
+    def checkHistoryExistence(self, accountId: int, date: str):
         """Check if a history entry exists in the database
 
         Parameters
         ----------
-        account_id : int
+        accountId : int
             ID of the account
         date : str
             Date of the history entry
@@ -56,12 +56,12 @@ class HistoryRepository:
         WHERE Account_id = ? AND Date = ?
         """
 
-        cursor = self.db.execute(query, (account_id, date))
+        cursor = self.db.execute(query, (accountId, date))
         result = cursor.fetchone()
 
         return result is not None
 
-    def fetch_all(self):
+    def fetchAll(self):
         """Fetch all history entries from the database
 
         Returns
@@ -70,5 +70,5 @@ class HistoryRepository:
             List of all history entries
         """
         query = """SELECT * FROM History"""
-        rows = self.db.fetch_all(query)
+        rows = self.db.fetchAll(query)
         return rows

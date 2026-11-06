@@ -5,20 +5,20 @@ from pathlib import Path
 class DatabaseManager:
     """Manage connection with the database"""
 
-    def __init__(self, db_path: Path):
+    def __init__(self, dbPath: Path):
         """Initialize DatabaseManager
 
         Parameters
         ----------
-        db_path : str
+        dbPath : str
             Path to the database file
         """
-        if not Path.exists(db_path):
-            from mysmartwallet.database.create_database import create_database
+        if not Path.exists(dbPath):
+            from mysmartwallet.database.createDatabase import createDatabase
 
-            create_database()
+            createDatabase()
 
-        self.conn = sqlite3.connect(str(db_path))
+        self.conn = sqlite3.connect(str(dbPath))
 
     def execute(self, query: str, params: tuple = ()):
         """Execute a query
@@ -39,7 +39,7 @@ class DatabaseManager:
         cursor.execute(query, params)
         return cursor
 
-    def executemany(self, query: str, data: list):
+    def executeMany(self, query: str, data: list):
         """Execute many identical queries
 
         Parameters
@@ -53,7 +53,7 @@ class DatabaseManager:
         cursor.executemany(query, data)
         return cursor
 
-    def fetch_all(self, query: str):
+    def fetchAll(self, query: str):
         """Get all results from a query
 
         Parameters

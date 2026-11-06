@@ -2,7 +2,7 @@ import sys
 from pathlib import Path
 
 
-def get_base_path():
+def getBasePath():
     """Get base path of the project
 
     Returns
@@ -17,7 +17,7 @@ def get_base_path():
     return Path(__file__).resolve().parents[3]
 
 
-def get_config_path():
+def getConfigPath():
     """Get config file path
 
     Returns
@@ -25,12 +25,12 @@ def get_config_path():
     str
         Path of the config file
     """
-    base_path = get_base_path()
+    basePath = getBasePath()
     if getattr(sys, "frozen", False):
-        return base_path / "config.ini"
-    return base_path / "config/config.ini"
+        return basePath / "config.ini"
+    return basePath / "config/config.ini"
 
 
 if __name__ == "__main__":
-    print(get_base_path())
-    print(get_config_path())
+    print(getBasePath())
+    print(getConfigPath())
