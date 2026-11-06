@@ -59,7 +59,7 @@ class TransactionController:
 
             self.transactionService.importTransactions(transactions)
             logger.info("Transactions persisted and service completed")
- 
+
             self.loadTransactionsIntoView()
         except Exception:
             import traceback

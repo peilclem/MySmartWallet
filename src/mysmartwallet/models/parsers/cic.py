@@ -42,7 +42,7 @@ class CICParser(PdfParser):
         logger.debug("Extracting transactions from PDF", extra={"file": file})
 
         tables = self.extractTables(file)
-        transactions: List[Transaction] = []
+        transactions: list[Transaction] = []
 
         for k, table in enumerate(tables[:-2]):
             table = table.fillna("0")
@@ -78,7 +78,9 @@ class CICParser(PdfParser):
                         if not transactionDict["date"]:
                             transactionDict["date"] = self.defaultDate
 
-                        transactionDict["category"] = "-"  # FIXME: Assign default category ?
+                        transactionDict["category"] = (
+                            "-"  # FIXME: Assign default category ?
+                        )
 
                         transactions.append(
                             Transaction(**transactionDict, account=str(k))
@@ -127,7 +129,9 @@ class CICParser(PdfParser):
                 "décembre": "12",
             }
             dateStr = lines[12].split(" ")  # Assuming the date is always on line 13
-            dateStr[1] = monthDict.get(dateStr[1].lower(), "01")  # Default to January if not found
+            dateStr[1] = monthDict.get(
+                dateStr[1].lower(), "01"
+            )  # Default to January if not found
             self.defaultDate = self.strToDate(f"{dateStr[0]}/{dateStr[1]}/{dateStr[2]}")
         except IndexError:
             self.defaultDate = self.strToDate("01/01/1900")
@@ -152,8 +156,7 @@ class CICParser(PdfParser):
 
         for transaction in transactions:
             transaction.account = accountNames.get(
-                int(transaction.account),
-                "Unknown Account"
+                int(transaction.account), "Unknown Account"
             )
 
             if transaction.account == "Unknown Account":
@@ -171,7 +174,7 @@ class CICParser(PdfParser):
 
         logger.debug("Cleaning account names")
 
-        accountNames: Dict[int, str] = {}
+        accountNames: dict[int, str] = {}
         k = 0
 
         for line in linesOfInterest:
@@ -193,7 +196,7 @@ class CICParser(PdfParser):
                 accountNames[k] = "Livret JEUNE"
                 k += 1
 
-            #FIXME: Replace with Enum ?
+            # FIXME: Replace with Enum ?
 
         return accountNames
 
@@ -209,7 +212,9 @@ class CICParser(PdfParser):
 
 
 if __name__ == "__main__":
-    fileTest = r"C:\Users\peill\Documents\Python_Scripts\MySmartWallet\data\Extrait2311.pdf"
+    fileTest = (
+        r"C:\Users\peill\Documents\Python_Scripts\MySmartWallet\data\Extrait2311.pdf"
+    )
 
     parser = CICParser()
     transactions = parser.extractTransactionFromTables(fileTest)

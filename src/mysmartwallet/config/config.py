@@ -16,6 +16,7 @@ class AppConfig:
     LOG_FILE: Path
     LOG_LEVEL: int
 
+
 def loadConfig() -> AppConfig:
     """
     Load the application configuration.
@@ -32,5 +33,6 @@ def loadConfig() -> AppConfig:
         LOG_FILE=Path(__file__).parents[2] / "logs" / "app.log",
         LOG_LEVEL=logging.DEBUG,
     )
+
 
 CONFIG = loadConfig()

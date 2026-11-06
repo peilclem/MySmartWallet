@@ -1,4 +1,3 @@
-from mysmartwallet.database.TransactionRepository import TransactionRepository
 import logging
 
 from mysmartwallet.database.TransactionRepository import TransactionRepository

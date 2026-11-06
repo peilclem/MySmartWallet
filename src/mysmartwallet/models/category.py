@@ -8,12 +8,12 @@ class Category:
     """A class representing a category object."""
 
     name: str
-    parent_id: int | None = None
+    parentId: int | None = None
     type: EnumCategoryType = EnumCategoryType.EXPENSE
-    user_id: int | None = None
+    userId: int | None = None
 
     @property
-    def is_root(self) -> bool:
+    def isRoot(self) -> bool:
         """Check if the category is a root category (i.e., has no parent)
 
         Returns
@@ -21,10 +21,10 @@ class Category:
         bool
             True if the category is a root category, False otherwise
         """
-        return self.parent_id is None
+        return self.parentId is None
 
     @property
-    def is_expense(self) -> bool:
+    def isExpense(self) -> bool:
         """Check if the category is an expense category
 
         Returns
@@ -35,7 +35,7 @@ class Category:
         return self.type.lower() == "expense"
 
     @property
-    def is_income(self) -> bool:
+    def isIncome(self) -> bool:
         """Check if the category is an income category
 
         Returns
@@ -46,7 +46,7 @@ class Category:
         return self.type.lower() == "income"
 
     @property
-    def is_transfer(self) -> bool:
+    def isTransfer(self) -> bool:
         """Check if the category is a transfer category
 
         Returns

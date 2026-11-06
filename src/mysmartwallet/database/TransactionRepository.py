@@ -122,5 +122,5 @@ if __name__ == "__main__":
     transactions = parser.parse(fileTest)
     repo = TransactionRepository(DatabaseManager(DB_PATH))
     repo.addMany(transactions)
- 
+
     print(repo.getAll())
