@@ -5,13 +5,7 @@
 ## Table of Contents
 
 - [Overview](#overview)
-- [What the app does today](#what-the-app-does-today)
 - [Architecture](#architecture)
-  - [UI (View)](#ui-view)
-  - [Controller](#controller)
-  - [Services (business logic)](#services-business-logic)
-  - [Repositories (persistence)](#repositories-persistence)
-  - [PDF parsing](#pdf-parsing)
 - [Data model & database](#data-model--database)
 - [Supported PDF format](#supported-pdf-format)
 - [Configuration](#configuration)
@@ -21,8 +15,7 @@
 - [Building a Windows executable](#building-a-windows-executable)
 - [CI pipeline](#ci-pipeline)
 - [Project structure](#project-structure)
-- [Known limitations / TODOs](#known-limitations--todos)
-- [Extending the project](#extending-the-project)
+- [Development Roadmap](#app-roadmap)
 - [License](#license)
 
 ## Overview
@@ -35,7 +28,7 @@
 4. Persists them in an on-disk **SQLite** database.
 5. Displays the stored transactions in a table.
 
-## What the app does today
+### What the app does today
 
 - Opens a small GUI window titled **“Transaction Widget”**.
 - Provides an **“Import Transactions”** button.
@@ -196,35 +189,47 @@ GitHub Actions workflow (`.github/workflows/ci.yml`):
 - `logs/`
   - application log file
 
-## Known limitations / TODOs
 
-Based on current implementation:
+## App roadmap
 
-- **Parser specificity:** `CICParser` relies on CIC-specific PDF layouts and heuristics.
-- **Category pipeline mismatch:** `CICParser` sets `category` to `"-"`, but `TransactionService` later overwrites it. (This is okay but redundant.)
-- **Date assumptions:** CIC parsing uses `default_date` with fallbacks; incorrect PDF formats can lead to wrong dates.
-- **No UI editing/filtering:** the UI is display-only besides importing.
-- **No duplicate handling:** transactions are simply inserted; there is no explicit deduplication logic in `TransactionRepository`.
-- **Potential type mismatch risk:** `Database TransactionRepository.get_all()` constructs `Transaction` with `date=row[1]` (SQLite stores DATE as text/whatever was inserted). If the DB stores strings in a format not covered by `Transaction.__post_init__`, date conversion may fail.
+Below is the chronological plan for the next app versions. (Focus: getting semi-automatic categorization → dashboard reports → richer UI → more banks → customization → new asset modules.)
 
-## Extending the project
+### v0.2 (Semi-automatic categorization)
+- Semi-automatic categorization driven by **history**:
+  - Save a `Label → Category` mapping when the user confirms/corrects a category.
+  - On new PDF import, reuse the saved mapping for matching labels.
+  - If no mapping exists: prompt the user to select a category (Income/Expense/Transfer or sub-category).
+- Add UI/UX hooks to confirm category decisions during import (minimum viable popup).
 
-Ideas for the next iterations:
+### v1.0 (Single dashboard + import flow)
+- Create a **one-page dashboard** that includes:
+  - An **Import Transactions** button.
+  - A popup/modal flow to choose a PDF, parse it, and perform categorization (including the “ask user when unknown” step).
+  - A table view (existing) plus basic summaries (totals by day/week/month, Income vs Expense, etc.).
 
-1. **Add parsers for other banks/formats**
-   - Create a new parser class inheriting `PdfParser` (e.g., `SocieteGeneraleParser`).
-   - Plug it into `main.py` (or make parser selection configurable).
+### v1.x (More PDF parsers)
+- Add more parsers so other banks/formats work:
+  - Introduce new `PdfParser` subclasses (e.g., `SocieteGeneraleParser`).
+  - Add parser selection (or auto-detection by PDF layout heuristics).
 
-2. **Improve categorization**
-   - Replace the sign-based categorization with rule-based categories keyed on label/merchant.
+### v1.x (Category customization)
+- Let the user customize categories:
+  - Create/edit categories.
+  - Manage parent/child categories.
+  - Update mappings if the user changes their category definitions.
 
-3. **Add transaction deduplication**
-   - Add a `UNIQUE` constraint (e.g., `(Account_id, Date, Label, Amount)`) or check before insert.
+### v2.0 (Multi-page / multi-layout reports)
+- Expand to a multi-page/multi-layout UI with dynamic reports:
+  - Monthly reports
+  - Yearly reports
+  - Cashflow
+- Use the structure/style inspiration from `resources/msw_layout.pptx`.
 
-4. **Expand the UI**
-   - Filters (by account/category/date)
-   - Search
-   - Edit/correct transactions
+### v3.0+ (Investments / additional asset tracking)
+- Add new modules beyond bank transactions:
+  - Stock market investment performance tracking.
+  - Real estate investment tracking.
+
 
 ## License
 
